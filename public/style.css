@@ -83,3 +83,20 @@ body:not(.settings-body) { overflow: hidden; }
 .ipad-layout .news-container, .ipad-layout #date { font-size: clamp(20px, 3vh, 28px); }
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
 .ipad-layout #calendar-container { display: none; }
+
+/* --- HAL9000 Animation --- */
+.hidden-on-load { opacity: 0; }
+.blinking { animation: blink-animation 0.45s linear; }
+@keyframes blink-animation {
+    0%, 33%, 67%, 100% { opacity: 1; }
+    17%, 50%, 83% { opacity: 0; }
+}
+.fade-in { animation: fade-in 1s ease forwards; }
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Layout adjustments when calendar is visible */
+.main-content.calendar-active { justify-content: flex-end; }
+.main-content.calendar-active .clock-container { margin-right: 30px; }
