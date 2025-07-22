@@ -121,7 +121,6 @@
             <button type="submit" class="btn btn-primary w-100 mt-3">保存</button>
         </form>
         <a href="/" class="back-link mt-4">ダッシュボードに戻る</a>
-
         <div class="mt-5 text-muted text-center small">
             <p class="mb-1">Version 1.0.0</p>
             <p class="mb-0">Innovation AILAB Network Team</p>
@@ -149,7 +148,7 @@
                 console.log("設定画面デバッグモニターが初期化されました。");
             } else {
                 $('#debug-monitor').hide();
-                $('body').removeClass('settings-body');
+                $('body').addClass('debug-overlay-active');
             }
 
             // --- テンプレートRSSデータ (2025年7月時点での検証済みリスト) ---
