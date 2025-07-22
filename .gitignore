@@ -181,3 +181,4 @@ cython_debug/
 .cursorindexingignore
 /dashboard-nodejs/node_modules
 /node_modules
+.env
