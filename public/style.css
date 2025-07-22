@@ -41,6 +41,8 @@ body.calendar-active .footer-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
     width: 100%;
     padding: 0 30px;
     box-sizing: border-box;
@@ -61,10 +63,9 @@ body.calendar-active .footer-container {
 #calendar-container {
     position: absolute;
     right: 30px;
-    bottom: 180px;
+    bottom: clamp(100px, 20vh, 180px);
     font-size: clamp(10px, 1.2vw, 16px);
-    width: 25vw;
-    max-width: 300px;
+    width: clamp(180px, 25vw, 300px);
 }
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 .calendar-header { text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 1.5em; }
