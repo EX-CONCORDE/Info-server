@@ -121,9 +121,11 @@ $(document).ready(function() {
     // --- 起動シーケンス ---
     function animateElement(selector) {
         const $element = $(selector);
+        $element.removeClass('hidden-on-load');
         $element.addClass('blinking');
         
         $element.on('animationend', function() {
+            $(this).off('animationend'); // イベントリスナーを一度だけ実行
             $element.removeClass('blinking').css('opacity', 0);
             setTimeout(() => {
                 $element.addClass('fade-in');
@@ -134,7 +136,7 @@ $(document).ready(function() {
     function startUpSequence() {
         animateElement('.clock-container');
         if(settings.showCalendar) animateElement('#calendar-container');
-        setTimeout(() => animateElement('.news-container'), 1000);
+        if(settings.showRss) setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container, .seconds-wrapper'), 2000);
     }
 
@@ -142,23 +144,18 @@ $(document).ready(function() {
     function initialize() {
         startUpSequence();
         updateDate();
-        if (settings.showWeather) fetchWeather();
-        if (settings.showRss) fetchNews();
+        fetchWeather();
+        fetchNews();
         renderCalendar();
         clockLoop();
 
         setInterval(updateDate, 60000);
-        if (settings.showWeather) setInterval(fetchWeather, 600000);
-        if (settings.showRss) setInterval(fetchNews, 3600000);
+        setInterval(fetchWeather, 600000);
+        setInterval(fetchNews, 3600000);
     }
 
-    if (!settings.rssUrlsRaw || !settings.lat || !settings.lon) {
-        if (window.location.pathname !== '/settings.html') {
-             $('.news-container').text('右上の歯車アイコンからRSSと地域を設定してください。').show();
-        }
-    } else {
-        initialize();
-    }
+    // 常に初期化を実行
+    initialize();
     
     // --- 既存の関数 ---
     function updateDate() {
@@ -167,6 +164,10 @@ $(document).ready(function() {
     }
 
     function fetchWeather() {
+        if (!settings.showWeather || !settings.lat || !settings.lon) {
+            if (settings.showWeather) $('#weather').text('位置情報が設定されていません。');
+            return;
+        }
         console.log("天気情報を取得中...");
         $.get(`/api/weather?lat=${settings.lat}&lon=${settings.lon}`, function(data) {
             let html = `<div>${data.name} (緯度:${data.coord.lat.toFixed(2)}, 経度:${data.coord.lon.toFixed(2)})</div>`;
@@ -181,7 +182,10 @@ $(document).ready(function() {
     }
 
     function fetchNews() {
-        if (rssUrls.length === 0) return;
+        if (!settings.showRss || rssUrls.length === 0) {
+            if (settings.showRss) $('#news-ticker-content').text('RSSフィードが設定されていません。');
+            return;
+        }
         console.log("RSSフィードを取得中...");
         const promises = rssUrls.map(url => $.get(`/api/news?feedUrl=${encodeURIComponent(url)}`).catch(e => { console.error(`Failed to fetch ${url}`, e); return null; }));
         Promise.all(promises).then(feeds => {
