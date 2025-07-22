@@ -13,6 +13,9 @@
 </head>
 <body>
     <div class="container">
+        <!-- 設定ページへのリンク (右上) -->
+        <a href="/settings.html" class="settings-link" title="設定">⚙️</a>
+
         <!-- 時計表示エリア -->
         <div class="clock-container">
             <div id="clock">00:00</div>
@@ -20,25 +23,28 @@
 
         <!-- 情報表示エリア -->
         <div class="info-container">
-            <!-- 天気と日付、秒のコンテナ -->
-            <div class="bottom-container">
-                <!-- ニュースティッカーのコンテナ -->
-                <div class="news-container">
-                    <div id="news-ticker-content"></div>
+            <!-- 秒表示エリア -->
+            <div class="seconds-wrapper">
+                <div id="seconds">
+                    <span class="second-digit">0</span>
+                    <span class="second-digit">0</span>
                 </div>
-                <!-- 右側の情報エリア -->
-                <div class="right-meta-container">
-                    <div class="date-seconds-wrapper">
-                        <div id="date"></div>
-                        <div id="seconds">00</div>
-                    </div>
-                    <div id="weather"></div>
+            </div>
+            <!-- ニュースティッカーのコンテナ -->
+            <div class="news-container">
+                <div id="news-ticker-content"></div>
+            </div>
+            <!-- メタ情報（天気、日付）のコンテナ -->
+            <div class="meta-container">
+                 <div id="weather">
+                    <!-- 天気情報がここに表示されます -->
+                </div>
+                <div id="date">
+                    <!-- 日付情報がここに表示されます -->
                 </div>
             </div>
         </div>
 
-        <!-- 設定ページへのリンク -->
-        <a href="/settings.html" class="settings-link" title="設定">⚙️</a>
     </div>
 
     <!-- jQueryを読み込みます -->

@@ -2,6 +2,7 @@ $(document).ready(function() {
     // --- 設定値の読み込み ---
     const rssUrlsRaw = localStorage.getItem('rssUrls');
     const rssUrls = rssUrlsRaw ? rssUrlsRaw.split('\n').filter(url => url.trim() !== '') : [];
+    const scrollSpeed = localStorage.getItem('scrollSpeed') || 120; // 速度を読み込み、なければ120に
     const lat = localStorage.getItem('latitude');
     const lon = localStorage.getItem('longitude');
 
@@ -13,7 +14,10 @@ $(document).ready(function() {
         const s = String(now.getSeconds()).padStart(2, '0');
         
         $('#clock').text(`${h}:${m}`);
-        $('#seconds').text(s);
+        
+        // 秒の各桁を別々のspanに設定
+        $('#seconds .second-digit').eq(0).text(s.charAt(0));
+        $('#seconds .second-digit').eq(1).text(s.charAt(1));
     }
 
     // --- 日付の表示 ---
@@ -46,15 +50,13 @@ $(document).ready(function() {
     function fetchNews() {
         if (rssUrls.length === 0) return;
 
-        // 全てのRSSフィード取得リクエストをPromiseとして作成
         const promises = rssUrls.map(url => 
             $.get(`/api/news?feedUrl=${encodeURIComponent(url)}`).catch(e => {
                 console.error(`Failed to fetch ${url}`, e);
-                return null; // エラーが発生した場合はnullを返す
+                return null;
             })
         );
 
-        // 全てのリクエストが完了したら処理を実行
         Promise.all(promises).then(feeds => {
             let allItems = [];
             feeds.forEach(feed => {
@@ -64,19 +66,26 @@ $(document).ready(function() {
             });
 
             if (allItems.length > 0) {
-                // ニュースの順番をシャッフルして多様性を出す
                 allItems.sort(() => Math.random() - 0.5);
                 
-                // ティッカーのコンテンツを作成
                 const tickerText = allItems.map(item => item.title).join('　／　');
                 const $tickerContent = $('#news-ticker-content');
                 $tickerContent.text(tickerText);
 
-                // コンテンツの長さに応じてアニメーションの時間を調整
-                const textWidth = $tickerContent.width();
-                const containerWidth = $('.news-container').width();
-                const duration = (textWidth + containerWidth) / 100; // 100ピクセル/秒の速度
-                $tickerContent.css('animation-duration', `${Math.max(20, duration)}s`);
+                $tickerContent.css('animation', 'none');
+                $tickerContent.get(0).offsetHeight; 
+
+                setTimeout(() => {
+                    const textWidth = $tickerContent.width();
+                    const containerWidth = $('.news-container').width();
+                    
+                    const duration = (textWidth + containerWidth) / parseInt(scrollSpeed, 10);
+                    
+                    $tickerContent.css({
+                        'animation-name': 'ticker-animation',
+                        'animation-duration': `${Math.max(20, duration)}s`
+                    });
+                }, 100);
 
             } else {
                 $('#news-ticker-content').text('ニュースが見つかりませんでした。');
@@ -87,7 +96,7 @@ $(document).ready(function() {
     // --- 関数の初回実行と定期実行 ---
     if (!rssUrlsRaw || !lat || !lon) {
         if (window.location.pathname !== '/settings.html') {
-             $('.news-container').text('右下の歯車アイコンからRSSと地域を設定してください。');
+             $('.news-container').text('右上の歯車アイコンからRSSと地域を設定してください。');
         }
     } else {
         updateClock();
@@ -95,8 +104,8 @@ $(document).ready(function() {
         fetchWeather();
         fetchNews();
 
-        setInterval(updateClock, 1000); // 1秒ごとに時計を更新
-        setInterval(fetchWeather, 600000); // 10分ごとに天気を更新
-        setInterval(fetchNews, 3600000); // 1時間ごとにニュースを再取得
+        setInterval(updateClock, 1000);
+        setInterval(fetchWeather, 600000);
+        setInterval(fetchNews, 3600000);
     }
 });

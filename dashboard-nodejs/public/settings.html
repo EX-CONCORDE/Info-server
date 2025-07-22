@@ -15,6 +15,10 @@
                 <textarea id="rss-urls" rows="5" placeholder="例: https://news.yahoo.co.jp/rss/topics/top-picks.xml"></textarea>
             </div>
             <div class="form-group">
+                <label for="scroll-speed">ニュース速度 (ピクセル/秒):</label>
+                <input type="number" id="scroll-speed" placeholder="例: 120" required>
+            </div>
+            <div class="form-group">
                 <label for="latitude">緯度:</label>
                 <input type="number" step="any" id="latitude" placeholder="例: 35.6895" required>
             </div>
@@ -30,20 +34,21 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // ページ読み込み時にlocalStorageから保存された値を読み込み、フォームに設定します
+            // 保存された設定を読み込む
             $('#rss-urls').val(localStorage.getItem('rssUrls'));
+            $('#scroll-speed').val(localStorage.getItem('scrollSpeed') || '120');
             $('#latitude').val(localStorage.getItem('latitude'));
             $('#longitude').val(localStorage.getItem('longitude'));
 
-            // フォームが送信されたときの処理
+            // フォーム送信時の処理
             $('#settings-form').on('submit', function(e) {
-                e.preventDefault(); // デフォルトのフォーム送信をキャンセル
-                // 入力された値をlocalStorageに保存します
+                e.preventDefault();
                 localStorage.setItem('rssUrls', $('#rss-urls').val());
+                localStorage.setItem('scrollSpeed', $('#scroll-speed').val());
                 localStorage.setItem('latitude', $('#latitude').val());
                 localStorage.setItem('longitude', $('#longitude').val());
                 alert('設定を保存しました。');
-                window.location.href = '/'; // ダッシュボードページに戻ります
+                window.location.href = '/';
             });
         });
     </script>
