@@ -21,11 +21,23 @@ body:not(.settings-body) { overflow: hidden; }
 
 /* フッターエリア */
 .footer-container { width: 100%; padding: 0 0 30px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
+body.calendar-active .footer-container {
+    padding-bottom: 10px;
+    gap: 10px;
+}
 .seconds-wrapper { width: 100%; display: flex; justify-content: flex-end; padding: 0 30px; box-sizing: border-box; }
 .news-container { width: 100%; overflow: hidden; border: 2px solid #4dabf7; border-radius: 8px; padding: 0.4em 0; font-size: clamp(18px, 2.5vw, 30px); box-sizing: border-box; }
 #news-ticker-content { display: inline-block; padding-left: 100%; animation-name: ticker-animation; animation-timing-function: linear; animation-iteration-count: infinite; white-space: nowrap; }
 .news-container:hover #news-ticker-content { animation-play-state: paused; }
-.meta-container { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0 30px; box-sizing: border-box; }
+.meta-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
+    margin-top: auto;
+}
 #date { text-align: right; font-size: clamp(18px, 2.5vw, 30px); line-height: 1.4; }
 #seconds { display: flex; flex-direction: column; align-items: center; }
 .seconds-main { display: flex; gap: 0.35em; }
@@ -38,7 +50,12 @@ body:not(.settings-body) { overflow: hidden; }
 @keyframes ticker-animation { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
 /* --- カレンダー --- */
-#calendar-container { position: absolute; top: 50%; left: 30px; transform: translateY(-50%); font-size: clamp(10px, 1.2vw, 16px); width: 25vw; max-width: 300px; }
+#calendar-container {
+    font-size: clamp(10px, 1.2vw, 16px);
+    width: 25vw;
+    max-width: 300px;
+    align-self: flex-start;
+}
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 .calendar-header { text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 1.5em; }
 .calendar-day, .calendar-weekday { text-align: center; padding: 0.5em 0; }
@@ -83,3 +100,17 @@ body:not(.settings-body) { overflow: hidden; }
 .ipad-layout .news-container, .ipad-layout #date { font-size: clamp(20px, 3vh, 28px); }
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
 .ipad-layout #calendar-container { display: none; }
+
+/* --- HAL9000 Animation --- */
+.hidden-on-load { opacity: 0; }
+.blinking { animation: blink-animation 0.45s linear; }
+@keyframes blink-animation {
+    0%, 33%, 67%, 100% { opacity: 1; }
+    17%, 50%, 83% { opacity: 0; }
+}
+.fade-in { animation: fade-in 1s ease forwards; }
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
