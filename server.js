@@ -1,31 +1,30 @@
 // 必要なモジュールをインポートします
+require('dotenv').config(); // .envファイルから環境変数を読み込む
 const express = require('express');
-const fetch = require('node-fetch'); // v2.xをインストールしてください
+const fetch = require('node-fetch');
 const Parser = require('rss-parser');
 
-// Expressアプリケーションを初期化します
 const app = express();
-const port = 3000; // サーバーがリッスンするポート
+const port = 3000;
 const parser = new Parser();
 
-// OpenWeatherMapから取得したAPIキーをここに設定してください
-// 注意: このキーはご自身で無料で取得する必要があります
-const WEATHER_API_KEY = '558ad01fdbaaa6debc2de703a0ef8cfe';
+// APIキーを環境変数から取得します
+const WEATHER_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 
-// 静的ファイル（HTML, CSS, JS）を 'public' ディレクトリから提供します
+// APIキーが設定されていない場合はエラーメッセージを表示して終了します
+if (!WEATHER_API_KEY) {
+    console.error('エラー: OpenWeatherMapのAPIキーが設定されていません。');
+    console.error('.envファイルを作成し、OPENWEATHERMAP_API_KEY="YOUR_KEY" の形式でキーを設定してください。');
+    process.exit(1); // プロセスを終了
+}
+
 app.use(express.static('public'));
 
-/**
- * 天気情報取得APIエンドポイント
- * クエリパラメータとして緯度(lat)と経度(lon)を受け取ります
- */
 app.get('/api/weather', async (req, res) => {
     const { lat, lon } = req.query;
-
     if (!lat || !lon) {
         return res.status(400).json({ error: 'Latitude and longitude are required' });
     }
-
     try {
         const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=ja`;
         const response = await fetch(apiUrl);
@@ -37,17 +36,11 @@ app.get('/api/weather', async (req, res) => {
     }
 });
 
-/**
- * RSSフィード取得APIエンドポイント
- * クエリパラメータとしてRSSフィードのURL(feedUrl)を受け取ります
- */
 app.get('/api/news', async (req, res) => {
     const { feedUrl } = req.query;
-
     if (!feedUrl) {
         return res.status(400).json({ error: 'RSS feed URL is required' });
     }
-
     try {
         const decodedUrl = decodeURIComponent(feedUrl);
         const feed = await parser.parseURL(decodedUrl);
@@ -58,7 +51,6 @@ app.get('/api/news', async (req, res) => {
     }
 });
 
-// 指定したポートでサーバーを起動します
 app.listen(port, () => {
     console.log(`Dashboard server running at http://localhost:${port}`);
 });

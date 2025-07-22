@@ -180,3 +180,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 /dashboard-nodejs/node_modules
+/node_modules
