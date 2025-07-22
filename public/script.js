@@ -1,24 +1,20 @@
 $(document).ready(function() {
-    // --- localStorageから設定を読み込む ---
-    const settings = {
-        rssUrlsRaw: localStorage.getItem('rssUrls'),
-        scrollSpeed: localStorage.getItem('scrollSpeed') || 120,
-        lat: localStorage.getItem('latitude'),
-        lon: localStorage.getItem('longitude'),
-        showRss: JSON.parse(localStorage.getItem('showRss') || 'true'),
-        showWeather: JSON.parse(localStorage.getItem('showWeather') || 'true'),
-        showCalendar: JSON.parse(localStorage.getItem('showCalendar') || 'false'),
-        showHolidays: JSON.parse(localStorage.getItem('showHolidays') || 'true'),
-        highPrecisionSeconds: JSON.parse(localStorage.getItem('highPrecisionSeconds') || 'false'),
-        alarmTime: localStorage.getItem('alarmTime') || '',
-        enableAlarm: JSON.parse(localStorage.getItem('enableAlarm') || 'false'),
-        showWind: JSON.parse(localStorage.getItem('showWind') || 'true'),
-        showPressure: JSON.parse(localStorage.getItem('showPressure') || 'true'),
-        showVisibility: JSON.parse(localStorage.getItem('showVisibility') || 'true'),
-        ipadMode: JSON.parse(localStorage.getItem('ipadMode') || 'false'),
-        debugOverlayEnabled: JSON.parse(localStorage.getItem('debugOverlay') || 'false')
-    };
-    const rssUrls = settings.rssUrlsRaw ? settings.rssUrlsRaw.split('\n').filter(url => url.trim() !== '') : [];
+    // --- 設定の読み込みとデフォルト値の設定 ---
+    function loadSettings() {
+        const savedSettings = Cookies.get('dashboardSettings') ? JSON.parse(Cookies.get('dashboardSettings')) : {};
+        const defaults = {
+            rssUrls: '', scrollSpeed: 120, latitude: '', longitude: '',
+            showRss: true, showWeather: true, showCalendar: false, showHolidays: true,
+            highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
+            showWind: true, showPressure: true, showVisibility: true,
+            ipadMode: false, debugOverlayEnabled: false
+        };
+        // 保存された設定とデフォルト値をマージ
+        return { ...defaults, ...savedSettings };
+    }
+
+    const settings = loadSettings();
+    const rssUrls = settings.rssUrls ? settings.rssUrls.split('\n').filter(url => url.trim() !== '') : [];
 
     // --- デバッグモニター ---
     if (settings.debugOverlayEnabled) {
@@ -34,11 +30,13 @@ $(document).ready(function() {
         console.log("Overlay debug init.");
     }
 
-    // --- レイアウト・表示設定 ---
-    if (settings.ipadMode) $('body').addClass('ipad-layout');
-    if (!settings.showRss) $('.news-container').hide();
-    if (!settings.showWeather) $('#weather').hide();
-    if (!settings.showCalendar) $('#calendar-container').hide();
+    // --- UIの初期設定 ---
+    function applyUISettings() {
+        if (settings.ipadMode) $('body').addClass('ipad-layout');
+        if (!settings.showRss) $('.news-container').hide();
+        if (!settings.showWeather) $('#weather').hide();
+        if (!settings.showCalendar) $('#calendar-container').hide();
+    }
 
     // --- アラーム関連 ---
     const $alarmSound = $('#alarm-sound')[0];
@@ -56,7 +54,7 @@ $(document).ready(function() {
     }
     $(document).on('click', stopAlarm);
 
-    // --- 時計の更新 ---
+    // --- 時計の更新ループ ---
     function clockLoop() {
         const now = new Date();
         const h = String(now.getHours()).padStart(2, '0');
@@ -78,7 +76,6 @@ $(document).ready(function() {
             $('#second-decimals').text('');
         }
 
-        // アラームチェック
         if (settings.enableAlarm && settings.alarmTime) {
             const currentTime = `${h}:${m}`;
             if (currentTime === settings.alarmTime && !isAlarmRinging && !alarmTriggeredToday) {
@@ -121,43 +118,22 @@ $(document).ready(function() {
     // --- 起動シーケンス ---
     function animateElement(selector) {
         const $element = $(selector);
-        $element.removeClass('hidden-on-load');
-        $element.addClass('blinking');
+        if ($element.is(':hidden')) return;
         
-        $element.on('animationend', function() {
-            $(this).off('animationend'); // イベントリスナーを一度だけ実行
-            $element.removeClass('blinking').css('opacity', 0);
-            setTimeout(() => {
-                $element.addClass('fade-in');
-            }, 500); // 0.5s wait
-        });
+        $element.removeClass('hidden-on-load').addClass('blinking');
+        setTimeout(() => {
+            $element.removeClass('blinking').addClass('fade-in');
+        }, 450); // 3 blinks * 150ms
     }
 
     function startUpSequence() {
         animateElement('.clock-container');
-        if(settings.showCalendar) animateElement('#calendar-container');
-        if(settings.showRss) setTimeout(() => animateElement('.news-container'), 1000);
+        animateElement('#calendar-container');
+        setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container, .seconds-wrapper'), 2000);
     }
 
-    // --- 初期化 & 定期実行 ---
-    function initialize() {
-        startUpSequence();
-        updateDate();
-        fetchWeather();
-        fetchNews();
-        renderCalendar();
-        clockLoop();
-
-        setInterval(updateDate, 60000);
-        setInterval(fetchWeather, 600000);
-        setInterval(fetchNews, 3600000);
-    }
-
-    // 常に初期化を実行
-    initialize();
-    
-    // --- 既存の関数 ---
+    // --- データ取得・更新関数 ---
     function updateDate() {
         const now = new Date();
         $('#date').html(`${now.getFullYear()}年 ${now.getMonth() + 1}月${now.getDate()}日 ${["日", "月", "火", "水", "木", "金", "土"][now.getDay()]}曜日`);
@@ -213,4 +189,18 @@ $(document).ready(function() {
             }
         });
     }
+
+    // --- アプリケーションの実行開始 ---
+    applyUISettings();
+    startUpSequence();
+    updateDate();
+    fetchWeather();
+    fetchNews();
+    renderCalendar();
+    clockLoop(); // 時計のループを開始
+
+    // 定期的なデータ更新
+    setInterval(updateDate, 60000);
+    setInterval(fetchWeather, 600000);
+    setInterval(fetchNews, 3600000);
 });
