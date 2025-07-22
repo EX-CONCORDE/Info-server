@@ -6,39 +6,35 @@ body, html {
     background-color: #000;
     color: #fff;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    overflow: hidden; /* スクロールバーを非表示に */
-}
-
-/* 全体を囲むコンテナ */
-.container {
+    /* overflow: hidden; を削除し、設定ページでスクロールできるように修正 */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 30px;
-    box-sizing: border-box;
-    height: 100%;
-    position: relative; /* アイコンの位置決めの基準 */
+}
+
+/* メインコンテンツエリア (時計) */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0; /* 水平方向の余白を削除 */
 }
 
 /* 時計のコンテナ */
 .clock-container {
     text-align: center;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* 時計のテキストスタイル */
 #clock {
     font-family: 'Orbitron', sans-serif;
-    font-size: 20vw;
+    font-size: clamp(100px, 22vw, 300px); /* フォントサイズを大きく調整 */
     font-weight: 700;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.1em;
+    gap: 0.1em; /* ご指定の間隔に修正 */
 }
 
 /* メイン時計の各桁のスタイル */
@@ -53,83 +49,87 @@ body, html {
     top: -0.05em; /* コロンの垂直位置を微調整 */
 }
 
-/* 下部の情報エリア */
-.info-container {
+/* フッターエリア */
+.footer-container {
     width: 100%;
+    padding: 0 0 30px 0; /* 水平方向の余白を削除し、下部の余白のみ残す */
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 15px; /* ニュースとメタ情報の間の隙間 */
+    gap: 15px; /* 各要素の間の隙間 */
 }
 
-/* 秒のラッパーを追加 */
+/* 秒のラッパー */
 .seconds-wrapper {
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    padding: 0 30px; /* 端に配置するため、個別に余白を設定 */
+    box-sizing: border-box;
 }
 
-/* ニュースティッカーのコンテナ (画面幅いっぱいに) */
+/* ニュースティッカーのコンテナ */
 .news-container {
-    width: 100vw; /* 画面幅 */
-    margin-left: calc(-50vw + 50%); /* 中央揃えのトリック */
+    width: 100%;
     overflow: hidden;
     border: 2px solid #4dabf7;
     border-radius: 8px;
     padding: 0.4em 0;
-    font-size: 2.5vw;
+    font-size: clamp(18px, 2.5vw, 30px); /* フォントサイズに上限と下限を設定 */
     box-sizing: border-box;
 }
 
 /* ニュースティッカーのコンテンツ（アニメーション対象） */
 #news-ticker-content {
     display: inline-block;
-    padding-left: 100%; /* 右端からスタートさせるため */
+    padding-left: 100%;
     animation-name: ticker-animation;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    white-space: nowrap; /* テキストの折り返しを防ぐ */
+    white-space: nowrap;
 }
 
-/* ニュースティッカーのホバー時 */
 .news-container:hover #news-ticker-content {
-    animation-play-state: paused; /* ホバーでアニメーションを一時停止 */
+    animation-play-state: paused;
 }
 
-/* メタ情報コンテナ */
+/* メタ情報コンテナ (天気と日付) */
 .meta-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     width: 100%;
+    padding: 0 30px; /* 端に配置するため、個別に余白を設定 */
+    box-sizing: border-box;
 }
 
 #date {
     text-align: right;
-    font-size: 2.5vw;
+    font-size: clamp(18px, 2.5vw, 30px); /* フォントサイズに上限と下限を設定 */
     line-height: 1.4;
 }
 
 /* 秒のコンテナのスタイル */
 #seconds {
-    display: flex; /* Flexboxを使用して中の要素を並べる */
-    gap: 0.35em; /* 各桁の間の隙間を調整 */
+    display: flex;
+    gap: 0.35em;
 }
 
 /* 秒の各桁のスタイル */
 .second-digit {
     font-family: 'Orbitron', sans-serif;
-    font-size: 5vw;
+    font-size: clamp(50px, 6vw, 85px); /* フォントサイズを大きく調整 */
     font-weight: 700;
     color: #ccc;
     line-height: 1;
-    width: 0.7em; /* 1文字分の幅を確保 */
-    text-align: center; /* 各桁を中央揃えに */
+    width: 0.7em;
+    text-align: center;
 }
 
 #weather {
     text-align: left;
-    font-size: 2.5vw;
-    line-height: 1.4;
+    font-size: clamp(14px, 1.4vw, 20px); /* フォントサイズに上限と下限を設定 */
+    line-height: 1.5;
 }
 
 /* 設定ページへのリンクアイコン (右上) */
@@ -137,11 +137,11 @@ body, html {
     position: absolute;
     top: 30px;
     right: 30px;
-    font-size: 2.5vw;
+    font-size: clamp(24px, 2.5vw, 40px); /* フォントサイズに上限と下限を設定 */
     color: #888;
     text-decoration: none;
     transition: color 0.3s;
-    z-index: 10; /* 他の要素より手前に表示 */
+    z-index: 10;
 }
 .settings-link:hover {
     color: #fff;
@@ -149,61 +149,38 @@ body, html {
 
 /* --- アニメーションの定義 --- */
 @keyframes ticker-animation {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
 }
 
 /* --- 設定ページのスタイル --- */
 .settings-page {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    padding-top: 5rem;
+    padding-bottom: 5rem; /* 下部にも余白を追加 */
 }
-.form-group {
-    margin-bottom: 20px;
+.settings-page .form-label {
     text-align: left;
-    display: inline-block;
-}
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #aaa;
-}
-input[type="number"],
-textarea {
-    width: 400px;
-    max-width: 80vw;
-    padding: 12px;
-    background-color: #222;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 16px;
-    resize: vertical;
-}
-button[type="submit"] {
-    padding: 12px 30px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-button[type="submit"]:hover {
-    background-color: #0056b3;
+    width: 100%;
 }
 .back-link {
-    display: block;
-    margin-top: 30px;
     color: #888;
     text-decoration: none;
 }
 .back-link:hover {
     color: #fff;
+}
+
+/* --- iPad 9th Gen Layout Adjustments --- */
+.ipad-layout #clock {
+    font-size: clamp(120px, 25vh, 200px); /* vh単位を使い、アスペクト比の影響を軽減 */
+}
+.ipad-layout .second-digit {
+    font-size: clamp(60px, 8vh, 75px);
+}
+.ipad-layout .news-container,
+.ipad-layout #date {
+    font-size: clamp(20px, 3vh, 28px);
+}
+.ipad-layout #weather {
+    font-size: clamp(16px, 2vh, 18px);
 }

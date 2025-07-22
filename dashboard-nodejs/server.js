@@ -10,7 +10,7 @@ const parser = new Parser();
 
 // OpenWeatherMapから取得したAPIキーをここに設定してください
 // 注意: このキーはご自身で無料で取得する必要があります
-const WEATHER_API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY';
+const WEATHER_API_KEY = '558ad01fdbaaa6debc2de703a0ef8cfe';
 
 // 静的ファイル（HTML, CSS, JS）を 'public' ディレクトリから提供します
 app.use(express.static('public'));

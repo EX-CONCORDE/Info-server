@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- デジタル時計風フォント(Orbitron)をGoogle Fontsから読み込みます -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,46 +14,41 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- 設定ページへのリンク (右上) -->
-        <a href="/settings.html" class="settings-link" title="設定">⚙️</a>
+    <!-- 設定ページへのリンク (右上) -->
+    <a href="/settings.html" class="settings-link" title="設定">⚙️</a>
 
+    <div class="main-content">
         <!-- 時計表示エリア -->
         <div class="clock-container">
             <div id="clock">
-                <span class="clock-digit">0</span>
-                <span class="clock-digit">0</span>
+                <span class="clock-digit">0</span><span class="clock-digit">0</span>
                 <span class="clock-separator">:</span>
-                <span class="clock-digit">0</span>
-                <span class="clock-digit">0</span>
+                <span class="clock-digit">0</span><span class="clock-digit">0</span>
             </div>
         </div>
-
-        <!-- 情報表示エリア -->
-        <div class="info-container">
-            <!-- 秒表示エリア -->
-            <div class="seconds-wrapper">
-                <div id="seconds">
-                    <span class="second-digit">0</span>
-                    <span class="second-digit">0</span>
-                </div>
-            </div>
-            <!-- ニュースティッカーのコンテナ -->
-            <div class="news-container">
-                <div id="news-ticker-content"></div>
-            </div>
-            <!-- メタ情報（天気、日付）のコンテナ -->
-            <div class="meta-container">
-                 <div id="weather">
-                    <!-- 天気情報がここに表示されます -->
-                </div>
-                <div id="date">
-                    <!-- 日付情報がここに表示されます -->
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <footer class="footer-container">
+        <!-- 秒表示エリア -->
+        <div class="seconds-wrapper">
+            <div id="seconds">
+                <span class="second-digit">0</span><span class="second-digit">0</span>
+            </div>
+        </div>
+        <!-- ニュースティッカーのコンテナ -->
+        <div class="news-container">
+            <div id="news-ticker-content"></div>
+        </div>
+        <!-- メタ情報（天気、日付）のコンテナ -->
+        <div class="meta-container">
+             <div id="weather">
+                <!-- 天気情報がここに表示されます -->
+             </div>
+            <div id="date">
+                <!-- 日付情報がここに表示されます -->
+            </div>
+        </div>
+    </footer>
 
     <!-- jQueryを読み込みます -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
