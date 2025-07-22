@@ -17,9 +17,13 @@ body:not(.settings-body) { overflow: hidden; }
 .news-container:hover #news-ticker-content { animation-play-state: paused; }
 .meta-container { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0 30px; box-sizing: border-box; }
 #date { text-align: right; font-size: clamp(18px, 2.5vw, 30px); line-height: 1.4; }
-#seconds { display: flex; align-items: baseline; gap: 0.35em; }
+
+/* 秒のレイアウト修正 */
+#seconds { display: flex; flex-direction: column; align-items: center; }
+.seconds-main { display: flex; gap: 0.35em; }
 .second-digit { font-family: 'Orbitron', sans-serif; font-size: clamp(50px, 6vw, 85px); font-weight: 700; color: #ccc; line-height: 1; width: 0.7em; text-align: center; }
-#second-decimals { font-size: 0.5em; font-family: 'Orbitron', sans-serif; color: #888; }
+#second-decimals { font-size: clamp(20px, 2.5vw, 34px); font-family: 'Orbitron', sans-serif; color: #888; letter-spacing: 0.1em; }
+
 #weather { text-align: left; font-size: clamp(14px, 1.4vw, 20px); line-height: 1.5; }
 .settings-link { position: absolute; top: 30px; right: 30px; font-size: clamp(24px, 2.5vw, 40px); color: #888; text-decoration: none; transition: color 0.3s; z-index: 10; }
 .settings-link:hover { color: #fff; }
@@ -28,12 +32,9 @@ body:not(.settings-body) { overflow: hidden; }
 
 /* --- 起動シーケンスアニメーション --- */
 .hidden-on-load { opacity: 0; }
-.blinking { animation: blink-animation 0.15s 3; } /* 3回点滅 */
 .fade-in { opacity: 1; transition: opacity 1.5s ease-in; }
-
-@keyframes blink-animation {
-    50% { opacity: 0; }
-}
+.blinking { animation: blink-animation 0.1s 3; }
+@keyframes blink-animation { 50% { opacity: 0; } }
 
 /* --- カレンダー --- */
 #calendar-container { position: absolute; top: 50%; left: 30px; transform: translateY(-50%); font-size: clamp(10px, 1.2vw, 16px); width: 25vw; max-width: 300px; }
@@ -66,6 +67,7 @@ body:not(.settings-body) { overflow: hidden; }
 /* --- iPad 9th Gen Layout Adjustments --- */
 .ipad-layout #clock { font-size: clamp(120px, 25vh, 200px); }
 .ipad-layout .second-digit { font-size: clamp(60px, 8vh, 75px); }
+.ipad-layout #second-decimals { font-size: clamp(24px, 3.5vh, 32px); }
 .ipad-layout .news-container, .ipad-layout #date { font-size: clamp(20px, 3vh, 28px); }
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
 .ipad-layout #calendar-container { display: none; }

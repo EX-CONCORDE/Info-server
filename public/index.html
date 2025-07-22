@@ -21,6 +21,9 @@
         <!-- Overlay Debug Monitor -->
         <div id="overlay-debug-monitor"></div>
 
+        <!-- カレンダー表示エリア -->
+        <div id="calendar-container" class="hidden-on-load"></div>
+
         <!-- 時計表示エリア -->
         <div class="clock-container hidden-on-load">
             <div id="clock">
@@ -35,7 +38,10 @@
         <!-- 秒表示エリア -->
         <div class="seconds-wrapper hidden-on-load">
             <div id="seconds">
-                <span class="second-digit">0</span><span class="second-digit">0</span><span id="second-decimals"></span>
+                 <div class="seconds-main">
+                    <span class="second-digit">0</span><span class="second-digit">0</span>
+                </div>
+                <div id="second-decimals">.0000</div>
             </div>
         </div>
         <!-- ニュースティッカーのコンテナ -->
@@ -58,7 +64,7 @@
 
     <!-- jQueryを読み込みます -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- 日本の祝日ライブラリ (ブラウザ用のURLに修正) -->
+    <!-- 日本の祝日ライブラリ -->
     <script src="https://cdn.jsdelivr.net/npm/@holiday-jp/holiday_jp@2.4.0/dist/holiday_jp.min.js"></script>
     <!-- フロントエンドのJavaScriptファイルを読み込みます -->
     <script src="script.js"></script>

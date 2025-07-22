@@ -68,12 +68,14 @@ $(document).ready(function() {
         $('#clock .clock-digit').eq(2).text(m.charAt(0));
         $('#clock .clock-digit').eq(3).text(m.charAt(1));
         
-        $('#seconds .second-digit').eq(0).text(s.charAt(0));
-        $('#seconds .second-digit').eq(1).text(s.charAt(1));
+        $('.seconds-main .second-digit').eq(0).text(s.charAt(0));
+        $('.seconds-main .second-digit').eq(1).text(s.charAt(1));
 
         if (settings.highPrecisionSeconds) {
             const ms = String(now.getMilliseconds()).padStart(3, '0');
             $('#second-decimals').text(`.${ms.slice(0,4)}`);
+        } else {
+            $('#second-decimals').text('');
         }
 
         // アラームチェック
@@ -119,18 +121,19 @@ $(document).ready(function() {
     // --- 起動シーケンス ---
     function animateElement(selector) {
         const $element = $(selector);
-        $element.removeClass('hidden-on-load');
         $element.addClass('blinking');
-        setTimeout(() => {
-            $element.removeClass('blinking');
+        
+        $element.on('animationend', function() {
+            $element.removeClass('blinking').css('opacity', 0);
             setTimeout(() => {
                 $element.addClass('fade-in');
             }, 500); // 0.5s wait
-        }, 450); // 3 blinks * 150ms
+        });
     }
 
     function startUpSequence() {
         animateElement('.clock-container');
+        if(settings.showCalendar) animateElement('#calendar-container');
         setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container, .seconds-wrapper'), 2000);
     }
@@ -189,31 +192,17 @@ $(document).ready(function() {
                 const tickerText = allItems.map(item => item.title).join('　／　');
                 const $newsContainer = $('.news-container');
                 const $oldTickerContent = $('#news-ticker-content');
-
-                // 新しいティッカー要素を作成して古いものと置き換える
                 const $newTickerContent = $('<div>').attr('id', 'news-ticker-content').text(tickerText);
                 $oldTickerContent.replaceWith($newTickerContent);
-
-                // requestAnimationFrameを使い、ブラウザの描画後に幅を計算する
                 requestAnimationFrame(() => {
                     const textWidth = $newTickerContent.width();
                     const containerWidth = $newsContainer.width();
-                    
                     let speed = parseInt(settings.scrollSpeed, 10);
-                    if (!speed || speed <= 0) {
-                        console.error("無効なスクロール速度のため、120に設定します。");
-                        speed = 120;
-                    }
-
+                    if (!speed || speed <= 0) { console.error("無効なスクロール速度のため、120に設定します。"); speed = 120; }
                     const duration = (textWidth + containerWidth) / speed;
-
-                    $newTickerContent.css({
-                        'animation-name': 'ticker-animation',
-                        'animation-duration': `${Math.max(20, duration)}s`
-                    });
+                    $newTickerContent.css({ 'animation-name': 'ticker-animation', 'animation-duration': `${Math.max(20, duration)}s` });
                     console.log(`ニュースティッカーを更新しました。 DURATION: ${duration.toFixed(2)}s`);
                 });
-
             } else { 
                 $('#news-ticker-content').text('ニュースが見つかりませんでした。');
                 console.warn("ニュースフィードが見つかりませんでした。"); 
