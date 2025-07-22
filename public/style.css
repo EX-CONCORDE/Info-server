@@ -62,7 +62,7 @@ body.calendar-active .footer-container {
 /* --- カレンダー --- */
 #calendar-container {
     position: absolute;
-    right: 30px;
+    left: 30px;
     bottom: clamp(100px, 20vh, 180px);
     font-size: clamp(10px, 1.2vw, 16px);
     width: clamp(180px, 25vw, 300px);

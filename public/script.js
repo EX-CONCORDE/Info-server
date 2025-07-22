@@ -16,6 +16,15 @@ $(document).ready(function() {
     const settings = loadSettings();
     const rssUrls = settings.rssUrls ? settings.rssUrls.split('\n').filter(url => url.trim() !== '') : [];
 
+    // --- 祝日データ ---
+    let holidayData = {};
+    function fetchHolidayData() {
+        $.getJSON('https://holidays-jp.github.io/api/v1/date.json', function(data) {
+            holidayData = data;
+            renderCalendar();
+        }).fail(() => console.error('祝日データの取得に失敗しました。'));
+    }
+
     // --- デバッグモニター ---
     if (settings.debugOverlayEnabled) {
         const debugContent = $('#overlay-debug-monitor').show();
@@ -115,7 +124,8 @@ $(document).ready(function() {
             const date = new Date(year, month, day);
             let classes = 'calendar-day';
             if (day === today) classes += ' today';
-            if (settings.showHolidays && typeof holiday_jp !== 'undefined' && holiday_jp.isHoliday(date)) {
+            const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            if (settings.showHolidays && holidayData[iso]) {
                 classes += ' holiday';
             }
             html += `<div class="${classes}">${day}</div>`;
@@ -206,6 +216,7 @@ $(document).ready(function() {
     updateDate();
     fetchWeather();
     fetchNews();
+    fetchHolidayData();
     renderCalendar();
     clockLoop(); // 時計のループを開始
 
