@@ -21,6 +21,10 @@ body:not(.settings-body) { overflow: hidden; }
 
 /* フッターエリア */
 .footer-container { width: 100%; padding: 0 0 30px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
+body.calendar-active .footer-container {
+    padding-bottom: 10px;
+    gap: 10px;
+}
 .seconds-wrapper { width: 100%; display: flex; justify-content: flex-end; padding: 0 30px; box-sizing: border-box; }
 .news-container { width: 100%; overflow: hidden; border: 2px solid #4dabf7; border-radius: 8px; padding: 0.4em 0; font-size: clamp(18px, 2.5vw, 30px); box-sizing: border-box; }
 #news-ticker-content { display: inline-block; padding-left: 100%; animation-name: ticker-animation; animation-timing-function: linear; animation-iteration-count: infinite; white-space: nowrap; }

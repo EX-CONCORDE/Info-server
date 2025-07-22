@@ -37,6 +37,9 @@ $(document).ready(function() {
         if (!settings.showWeather) $('#weather').hide();
         if (!settings.showCalendar) {
             $('#calendar-container').hide();
+            $('body').removeClass('calendar-active');
+        } else {
+            $('body').addClass('calendar-active');
         }
         // 時計は常に表示する
         $('.clock-container').show();
