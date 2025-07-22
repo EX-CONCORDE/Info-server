@@ -34,8 +34,23 @@ body, html {
     font-family: 'Orbitron', sans-serif;
     font-size: 20vw;
     font-weight: 700;
-    letter-spacing: 0.05em;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1em;
+}
+
+/* メイン時計の各桁のスタイル */
+.clock-digit {
+    width: 0.7em;
+    text-align: center;
+}
+
+/* メイン時計のコロンのスタイル */
+.clock-separator {
+    position: relative;
+    top: -0.05em; /* コロンの垂直位置を微調整 */
 }
 
 /* 下部の情報エリア */

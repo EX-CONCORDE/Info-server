@@ -13,9 +13,13 @@ $(document).ready(function() {
         const m = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
         
-        $('#clock').text(`${h}:${m}`);
+        // メインの時計の各桁を更新
+        $('#clock .clock-digit').eq(0).text(h.charAt(0));
+        $('#clock .clock-digit').eq(1).text(h.charAt(1));
+        $('#clock .clock-digit').eq(2).text(m.charAt(0));
+        $('#clock .clock-digit').eq(3).text(m.charAt(1));
         
-        // 秒の各桁を別々のspanに設定
+        // 秒の各桁を更新
         $('#seconds .second-digit').eq(0).text(s.charAt(0));
         $('#seconds .second-digit').eq(1).text(s.charAt(1));
     }
