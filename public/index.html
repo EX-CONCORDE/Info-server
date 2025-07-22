@@ -29,13 +29,16 @@
                 <span class="clock-digit">0</span><span class="clock-digit">0</span>
             </div>
         </div>
+
+        <!-- カレンダー表示エリア -->
+        <div id="calendar-container"></div>
     </div>
 
     <footer class="footer-container">
         <!-- 秒表示エリア -->
         <div class="seconds-wrapper">
             <div id="seconds">
-                <span class="second-digit">0</span><span class="second-digit">0</span>
+                <span class="second-digit">0</span><span class="second-digit">0</span><span id="second-decimals"></span>
             </div>
         </div>
         <!-- ニュースティッカーのコンテナ -->
@@ -53,8 +56,13 @@
         </div>
     </footer>
 
+    <!-- アラーム音 -->
+    <audio id="alarm-sound" src="https://cdn.freesound.org/previews/219/219244_4032686-lq.mp3" preload="auto"></audio>
+
     <!-- jQueryを読み込みます -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 日本の祝日ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/@holiday-jp/holiday_jp@2.4.0/lib/holiday_jp.min.js"></script>
     <!-- フロントエンドのJavaScriptファイルを読み込みます -->
     <script src="script.js"></script>
 </body>

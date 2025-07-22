@@ -23,13 +23,51 @@
         <h1 class="mb-4">設定</h1>
         <form id="settings-form" class="col-md-8 col-lg-6 mx-auto">
             
+            <hr>
+            <h5 class="mt-4">表示機能 ON/OFF</h5>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="show-rss">
+                <label class="form-check-label" for="show-rss">RSSティッカー</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="show-weather">
+                <label class="form-check-label" for="show-weather">天気予報</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="show-calendar">
+                <label class="form-check-label" for="show-calendar">カレンダー</label>
+            </div>
+             <div class="ps-4 form-check form-switch" id="show-holidays-wrapper">
+                <input class="form-check-input" type="checkbox" role="switch" id="show-holidays">
+                <label class="form-check-label" for="show-holidays">祝日表示 (カレンダーON時)</label>
+            </div>
+
+            <hr>
+            <h5 class="mt-4">時計・アラーム設定</h5>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="high-precision-seconds">
+                <label class="form-check-label" for="high-precision-seconds">秒を小数点4桁まで表示</label>
+            </div>
+            <div class="form-group mb-3">
+                 <label class="form-label mt-2">アラーム:</label>
+                <div class="input-group">
+                    <input type="time" id="alarm-time" class="form-control">
+                    <div class="input-group-text">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="enable-alarm" title="アラーム ON/OFF">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <h5 class="mt-4">RSS設定</h5>
             <div class="form-group mb-3">
                 <label class="form-label">テンプレートRSS:</label>
                 <div id="preset-rss-list" class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
                     <!-- テンプレートRSSのトグルがここに動的に生成されます -->
                 </div>
             </div>
-
             <div class="form-group mb-3">
                 <label for="rss-urls" class="form-label">カスタムRSSフィードURL (1行に1つ):</label>
                 <textarea id="rss-urls" class="form-control" rows="4" placeholder="上記テンプレートにないRSSフィードを追加"></textarea>
@@ -38,6 +76,9 @@
                 <label for="scroll-speed" class="form-label">ニュース速度 (ピクセル/秒):</label>
                 <input type="number" id="scroll-speed" class="form-control" placeholder="例: 120" required>
             </div>
+
+            <hr>
+            <h5 class="mt-4">天気設定</h5>
              <div class="form-group mb-3">
                 <label class="form-label">位置情報:</label>
                 <div class="input-group">
@@ -49,7 +90,6 @@
                 </div>
                 <div id="location-status" class="form-text"></div>
             </div>
-            <hr>
             <div class="form-group mb-3">
                 <label class="form-label">表示する天気情報:</label>
                 <div class="form-check form-switch">
@@ -65,9 +105,10 @@
                     <label class="form-check-label" for="show-visibility">雲量・視程</label>
                 </div>
             </div>
+
             <hr>
+            <h5 class="mt-4">デバイス最適化</h5>
             <div class="form-group mb-3">
-                <label class="form-label">デバイス最適化:</label>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="ipad-mode">
                     <label class="form-check-label" for="ipad-mode">iPad (9th Gen) レイアウト</label>
@@ -77,9 +118,14 @@
                     <label class="form-check-label" for="debug-overlay">メイン画面にデバッグ情報をオーバーレイ</label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">保存</button>
+            <button type="submit" class="btn btn-primary w-100 mt-3">保存</button>
         </form>
         <a href="/" class="back-link mt-4">ダッシュボードに戻る</a>
+
+        <div class="mt-5 text-muted text-center small">
+            <p class="mb-1">Version 1.0.0</p>
+            <p class="mb-0">Innovation AILAB Network Team</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -106,20 +152,23 @@
                 $('body').removeClass('settings-body');
             }
 
-            // --- テンプレートRSSデータ (検証・修正済み) ---
+            // --- テンプレートRSSデータ (2025年7月時点での検証済みリスト) ---
             const presetFeeds = {
                 '読売新聞':'https://www.yomiuri.co.jp/rss/yol/topstories.xml',
                 '朝日新聞':'https://www.asahi.com/rss/asahi/newsheadlines.rdf',
                 '毎日新聞':'https://mainichi.jp/rss/etc/mainichi-flash.rss',
                 '産経新聞':'https://www.sankei.com/main/rss/main-flash.xml',
+                '日経新聞':'https://www.nikkei.com/rss/2.0/news_BreakingNews.xml',
                 'NHK':'https://www.nhk.or.jp/rss/news/cat0.xml',
+                '共同通信':'https://www.kyodo.co.jp/c/rss/flash.xml',
                 '時事通信':'https://www.jiji.com/rss/ranking.xml',
                 'Yahoo!ニュース':'https://news.yahoo.co.jp/rss/topics/top-picks.xml',
                 'Googleニュース':'https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja',
                 'ITmedia NEWS':'https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml',
                 'CNET Japan':'https://japan.cnet.com/rss/index.rdf',
+                'TechCrunch Japan':'https://jp.techcrunch.com/feed/',
                 'GIZMODO':'https://www.gizmodo.jp/index.xml',
-                'WIRED.jp':'https://wired.jp/rssfeeder/',
+                'WIRED.jp':'https://wired.jp/feed/',
                 'GIGAZINE':'https://gigazine.net/news/rss_2.0/',
                 'はてなブックマーク':'https://b.hatena.ne.jp/hotentry/all.rss'
             };
@@ -127,44 +176,33 @@
             const presetList = $('#preset-rss-list');
             Object.entries(presetFeeds).forEach(([name, url]) => {
                 const switchId = `preset-${name.replace(/[^a-zA-Z0-9]/g, '')}`;
-                presetList.append(`
-                    <div class="form-check form-switch">
-                        <input class="form-check-input preset-rss-toggle" type="checkbox" id="${switchId}" data-url="${url}">
-                        <label class="form-check-label" for="${switchId}">${name}</label>
-                    </div>`);
+                presetList.append(`<div class="form-check form-switch"><input class="form-check-input preset-rss-toggle" type="checkbox" id="${switchId}" data-url="${url}"><label class="form-check-label" for="${switchId}">${name}</label></div>`);
             });
+            
+            // --- UI連動ロジック ---
+            const $calendarToggle = $('#show-calendar');
+            const $holidaysWrapper = $('#show-holidays-wrapper');
+            
+            function toggleHolidayOption() {
+                if ($calendarToggle.is(':checked')) {
+                    $holidaysWrapper.show();
+                } else {
+                    $holidaysWrapper.hide();
+                }
+            }
+            $calendarToggle.on('change', toggleHolidayOption);
+
 
             // --- 位置情報取得ボタンの処理 ---
             $('#get-location-btn').on('click', function() {
                 const $status = $('#location-status');
                 if (!navigator.geolocation) {
-                    $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger');
-                    return;
+                    $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger'); return;
                 }
-
                 $status.text('位置情報を取得中...').removeClass('text-danger text-success');
                 navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        $('#latitude').val(latitude.toFixed(6));
-                        $('#longitude').val(longitude.toFixed(6));
-                        $status.text('位置情報を取得しました。').addClass('text-success');
-                    },
-                    (error) => {
-                        let message = '位置情報の取得に失敗しました。';
-                        switch(error.code) {
-                            case error.PERMISSION_DENIED:
-                                message += ' (許可されませんでした)';
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                message += ' (位置を特定できませんでした)';
-                                break;
-                            case error.TIMEOUT:
-                                message += ' (タイムアウトしました)';
-                                break;
-                        }
-                        $status.text(message).addClass('text-danger');
-                    }
+                    (p) => { $('#latitude').val(p.coords.latitude.toFixed(6)); $('#longitude').val(p.coords.longitude.toFixed(6)); $status.text('位置情報を取得しました。').addClass('text-success'); },
+                    (e) => { $status.text(`位置情報の取得に失敗しました(${e.code})`).addClass('text-danger'); }
                 );
             });
 
@@ -172,19 +210,28 @@
             function loadSettings() {
                 console.log("設定をlocalStorageから読み込んでいます...");
                 const savedUrls = (localStorage.getItem('rssUrls') || '').split('\n').filter(Boolean);
-                $('.preset-rss-toggle').each(function() {
-                    $(this).prop('checked', savedUrls.includes($(this).data('url')));
-                });
+                $('.preset-rss-toggle').each(function() { $(this).prop('checked', savedUrls.includes($(this).data('url'))); });
                 const customUrls = savedUrls.filter(url => !Object.values(presetFeeds).includes(url));
                 $('#rss-urls').val(customUrls.join('\n'));
                 $('#scroll-speed').val(localStorage.getItem('scrollSpeed') || '120');
                 $('#latitude').val(localStorage.getItem('latitude'));
                 $('#longitude').val(localStorage.getItem('longitude'));
+                
+                $('#show-rss').prop('checked', JSON.parse(localStorage.getItem('showRss') || 'true'));
+                $('#show-weather').prop('checked', JSON.parse(localStorage.getItem('showWeather') || 'true'));
+                $('#show-calendar').prop('checked', JSON.parse(localStorage.getItem('showCalendar') || 'false'));
+                $('#show-holidays').prop('checked', JSON.parse(localStorage.getItem('showHolidays') || 'true'));
+                $('#high-precision-seconds').prop('checked', JSON.parse(localStorage.getItem('highPrecisionSeconds') || 'false'));
+                $('#alarm-time').val(localStorage.getItem('alarmTime') || '');
+                $('#enable-alarm').prop('checked', JSON.parse(localStorage.getItem('enableAlarm') || 'false'));
+                
                 $('#show-wind').prop('checked', JSON.parse(localStorage.getItem('showWind') || 'true'));
                 $('#show-pressure').prop('checked', JSON.parse(localStorage.getItem('showPressure') || 'true'));
                 $('#show-visibility').prop('checked', JSON.parse(localStorage.getItem('showVisibility') || 'true'));
                 $('#ipad-mode').prop('checked', JSON.parse(localStorage.getItem('ipadMode') || 'false'));
                 $('#debug-overlay').prop('checked', debugOverlayEnabled);
+                
+                toggleHolidayOption(); // 初期表示を更新
                 console.log("設定の読み込みが完了しました。");
             }
             loadSettings();
@@ -201,6 +248,13 @@
                 localStorage.setItem('scrollSpeed', $('#scroll-speed').val());
                 localStorage.setItem('latitude', $('#latitude').val());
                 localStorage.setItem('longitude', $('#longitude').val());
+                localStorage.setItem('showRss', $('#show-rss').prop('checked'));
+                localStorage.setItem('showWeather', $('#show-weather').prop('checked'));
+                localStorage.setItem('showCalendar', $('#show-calendar').prop('checked'));
+                localStorage.setItem('showHolidays', $('#show-holidays').prop('checked'));
+                localStorage.setItem('highPrecisionSeconds', $('#high-precision-seconds').prop('checked'));
+                localStorage.setItem('alarmTime', $('#alarm-time').val());
+                localStorage.setItem('enableAlarm', $('#enable-alarm').prop('checked'));
                 localStorage.setItem('showWind', $('#show-wind').prop('checked'));
                 localStorage.setItem('showPressure', $('#show-pressure').prop('checked'));
                 localStorage.setItem('showVisibility', $('#show-visibility').prop('checked'));
