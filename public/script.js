@@ -6,6 +6,7 @@ $(document).ready(function() {
             rssUrls: '', scrollSpeed: 120, latitude: '', longitude: '',
             showRss: true, showWeather: true, showCalendar: false, showHolidays: true,
             highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
+            enableChime: false, enableQuake: false, quakeThreshold: 1,
             showWind: true, showPressure: true, showVisibility: true,
             ipadMode: false, debugOverlayEnabled: false
         };
@@ -48,6 +49,7 @@ $(document).ready(function() {
             $('#calendar-container').hide();
             $('body').removeClass('calendar-active');
         } else {
+            $('#calendar-container').show();
             $('body').addClass('calendar-active');
         }
         // 時計は常に表示する
@@ -56,8 +58,11 @@ $(document).ready(function() {
 
     // --- アラーム関連 ---
     const $alarmSound = $('#alarm-sound')[0];
+    const $chimeSound = $('#hourly-chime')[0];
+    let lastChimeHour = null;
     let isAlarmRinging = false;
     let alarmTriggeredToday = false;
+    let lastQuakeId = null;
     
     function stopAlarm() {
         if (isAlarmRinging) {
@@ -102,6 +107,14 @@ $(document).ready(function() {
                 alarmTriggeredToday = true;
             }
             if (currentTime === "00:00") alarmTriggeredToday = false;
+        }
+
+        if (settings.enableChime && now.getMinutes() === 0 && now.getSeconds() === 0) {
+            if (lastChimeHour !== now.getHours()) {
+                $chimeSound.currentTime = 0;
+                $chimeSound.play();
+                lastChimeHour = now.getHours();
+            }
         }
         
         requestAnimationFrame(clockLoop);
@@ -210,12 +223,44 @@ $(document).ready(function() {
         });
     }
 
+    // --- 地震情報取得 ---
+    const scaleMap = {
+        0: '0', 10: '1', 20: '2', 30: '3', 40: '4', 45: '5弱',
+        50: '5強', 55: '6弱', 60: '6強', 70: '7'
+    };
+
+    function fetchQuake() {
+        if (!settings.enableQuake) return;
+        $.get('https://api.p2pquake.net/v2/jma/quake?limit=1', function(data) {
+            if (!data || !data.length) return;
+            const q = data[0];
+            if (q.id === lastQuakeId) return;
+            lastQuakeId = q.id;
+            const scale = q.earthquake.maxScale;
+            const threshold = (parseInt(settings.quakeThreshold, 10) || 1) * 10;
+            if (scale >= threshold) {
+                const text = `${q.earthquake.hypocenter.name}で震度${scaleMap[scale] || scale}`;
+                $('#quake-banner').text(text).addClass('visible');
+                setTimeout(() => $('#quake-banner').removeClass('visible'), 10000);
+            }
+            if (scale >= 50) {
+                if (!isAlarmRinging) {
+                    $('body').addClass('alarm-ringing');
+                    $alarmSound.play();
+                    isAlarmRinging = true;
+                    setTimeout(stopAlarm, 10000);
+                }
+            }
+        }).fail(() => console.error('地震情報の取得に失敗しました。'));
+    }
+
     // --- アプリケーションの実行開始 ---
     applyUISettings();
     startUpSequence();
     updateDate();
     fetchWeather();
     fetchNews();
+    fetchQuake();
     fetchHolidayData();
     renderCalendar();
     clockLoop(); // 時計のループを開始
@@ -224,4 +269,5 @@ $(document).ready(function() {
     setInterval(updateDate, 60000);
     setInterval(fetchWeather, 600000);
     setInterval(fetchNews, 3600000);
+    setInterval(fetchQuake, 60000);
 });
