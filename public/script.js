@@ -35,7 +35,9 @@ $(document).ready(function() {
         if (settings.ipadMode) $('body').addClass('ipad-layout');
         if (!settings.showRss) $('.news-container').hide();
         if (!settings.showWeather) $('#weather').hide();
-        if (!settings.showCalendar) $('#calendar-container').hide();
+        if (!settings.showCalendar) {
+            $('#calendar-container').hide();
+        }
     }
 
     // --- アラーム関連 ---
@@ -108,7 +110,9 @@ $(document).ready(function() {
             const date = new Date(year, month, day);
             let classes = 'calendar-day';
             if (day === today) classes += ' today';
-            if (settings.showHolidays && holiday_jp.isHoliday(date)) classes += ' holiday';
+            if (settings.showHolidays && typeof holiday_jp !== 'undefined' && holiday_jp.isHoliday(date)) {
+                classes += ' holiday';
+            }
             html += `<div class="${classes}">${day}</div>`;
         }
         html += '</div>';
@@ -119,18 +123,20 @@ $(document).ready(function() {
     function animateElement(selector) {
         const $element = $(selector);
         if ($element.is(':hidden')) return;
-        
+
         $element.removeClass('hidden-on-load').addClass('blinking');
         setTimeout(() => {
-            $element.removeClass('blinking').addClass('fade-in');
+            $element.removeClass('blinking');
+            setTimeout(() => $element.addClass('fade-in'), 500);
         }, 450); // 3 blinks * 150ms
     }
 
     function startUpSequence() {
         animateElement('.clock-container');
-        animateElement('#calendar-container');
+        animateElement('.seconds-wrapper');
+        if (settings.showCalendar) animateElement('#calendar-container');
         setTimeout(() => animateElement('.news-container'), 1000);
-        setTimeout(() => animateElement('.meta-container, .seconds-wrapper'), 2000);
+        setTimeout(() => animateElement('.meta-container'), 2000);
     }
 
     // --- データ取得・更新関数 ---
@@ -140,12 +146,12 @@ $(document).ready(function() {
     }
 
     function fetchWeather() {
-        if (!settings.showWeather || !settings.lat || !settings.lon) {
+        if (!settings.showWeather || !settings.latitude || !settings.longitude) {
             if (settings.showWeather) $('#weather').text('位置情報が設定されていません。');
             return;
         }
         console.log("天気情報を取得中...");
-        $.get(`/api/weather?lat=${settings.lat}&lon=${settings.lon}`, function(data) {
+        $.get(`/api/weather?lat=${settings.latitude}&lon=${settings.longitude}`, function(data) {
             let html = `<div>${data.name} (緯度:${data.coord.lat.toFixed(2)}, 経度:${data.coord.lon.toFixed(2)})</div>`;
             html += `<div><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" style="vertical-align: middle; height: 2em; margin-right: 0.2em;"><span style="font-size: 1.5em; vertical-align: middle;">${data.main.temp.toFixed(1)}°C</span> (${data.weather[0].description})</div>`;
             html += `<div><span style="color: #ff6347;">${data.main.temp_max.toFixed(1)}°C</span> / <span style="color: #4682b4;">${data.main.temp_min.toFixed(1)}°C</span> (体感: ${data.main.feels_like.toFixed(1)}°C)</div>`;
