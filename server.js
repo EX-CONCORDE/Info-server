@@ -18,8 +18,10 @@ if (!WEATHER_API_KEY) {
     process.exit(1); // プロセスを終了
 }
 
+// publicディレクトリのファイルを静的ファイルとして提供します
 app.use(express.static('public'));
 
+// 天気情報取得API
 app.get('/api/weather', async (req, res) => {
     const { lat, lon } = req.query;
     if (!lat || !lon) {
@@ -36,6 +38,7 @@ app.get('/api/weather', async (req, res) => {
     }
 });
 
+// RSSフィード取得API
 app.get('/api/news', async (req, res) => {
     const { feedUrl } = req.query;
     if (!feedUrl) {
@@ -51,6 +54,7 @@ app.get('/api/news', async (req, res) => {
     }
 });
 
+// サーバーを起動
 app.listen(port, () => {
     console.log(`Dashboard server running at http://localhost:${port}`);
 });
