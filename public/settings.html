@@ -119,6 +119,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary w-100 mt-3">保存</button>
+            <button type="button" id="reset-cookie" class="btn btn-outline-danger w-100 mt-2">Cookieをリセット</button>
         </form>
         <a href="/" class="back-link mt-4">ダッシュボードに戻る</a>
         <div class="mt-5 text-muted text-center small">
@@ -267,6 +268,15 @@
                 console.log("保存された設定:", settingsToSave);
                 alert('設定を保存しました。');
                 window.location.href = '/';
+            });
+
+            // --- Cookieリセット ---
+            $('#reset-cookie').on('click', function() {
+                if (confirm('全ての設定をリセットしますか？')) {
+                    Cookies.remove('dashboardSettings');
+                    alert('Cookieをリセットしました。');
+                    location.reload();
+                }
             });
         });
     </script>

@@ -71,9 +71,10 @@ body.calendar-active .footer-container {
 /* --- 設定ページのスタイル --- */
 .settings-body {
     height: auto; /* コンテンツに合わせて高さを自動調整 */
-    min-height: 100%;
+    min-height: 100vh; /* 背景が途切れないように */
     display: block; /* flexを解除して通常のスクロールを有効に */
     padding-right: 320px; /* デバッグモニターのスペースを確保 */
+    background-color: #000; /* 一貫した暗色背景 */
 }
 .settings-body.debug-overlay-active {
     padding-right: 0; /* オーバーレイ時はパディングを削除 */
@@ -81,6 +82,8 @@ body.calendar-active .footer-container {
 .settings-page {
     padding-top: 2rem;
     padding-bottom: 5rem;
+    max-width: 700px;
+    margin: 0 auto;
 }
 .settings-page .form-label { text-align: left; width: 100%; }
 .back-link { color: #888; text-decoration: none; }
