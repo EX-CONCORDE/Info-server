@@ -128,10 +128,13 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script>
         $(document).ready(function() {
             // --- デバッグモニター設定 ---
-            const debugOverlayEnabled = JSON.parse(localStorage.getItem('debugOverlay') || 'false');
+            const savedSettingsForDebug = Cookies.get('dashboardSettings') ? JSON.parse(Cookies.get('dashboardSettings')) : {};
+            const debugOverlayEnabled = savedSettingsForDebug.debugOverlayEnabled || false;
+            
             if (!debugOverlayEnabled) {
                 const debugContent = document.querySelector('#debug-monitor .debug-content');
                 function logToMonitor(message, type = 'log') {
@@ -151,7 +154,7 @@
                 $('body').addClass('debug-overlay-active');
             }
 
-            // --- テンプレートRSSデータ (2025年7月時点での検証済みリスト) ---
+            // --- テンプレートRSSデータ ---
             const presetFeeds = {
                 '読売新聞':'https://www.yomiuri.co.jp/rss/yol/topstories.xml',
                 '朝日新聞':'https://www.asahi.com/rss/asahi/newsheadlines.rdf',
@@ -178,26 +181,14 @@
                 presetList.append(`<div class="form-check form-switch"><input class="form-check-input preset-rss-toggle" type="checkbox" id="${switchId}" data-url="${url}"><label class="form-check-label" for="${switchId}">${name}</label></div>`);
             });
             
-            // --- UI連動ロジック ---
             const $calendarToggle = $('#show-calendar');
             const $holidaysWrapper = $('#show-holidays-wrapper');
-            
-            function toggleHolidayOption() {
-                if ($calendarToggle.is(':checked')) {
-                    $holidaysWrapper.show();
-                } else {
-                    $holidaysWrapper.hide();
-                }
-            }
+            function toggleHolidayOption() { $holidaysWrapper.toggle($calendarToggle.is(':checked')); }
             $calendarToggle.on('change', toggleHolidayOption);
 
-
-            // --- 位置情報取得ボタンの処理 ---
             $('#get-location-btn').on('click', function() {
                 const $status = $('#location-status');
-                if (!navigator.geolocation) {
-                    $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger'); return;
-                }
+                if (!navigator.geolocation) { $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger'); return; }
                 $status.text('位置情報を取得中...').removeClass('text-danger text-success');
                 navigator.geolocation.getCurrentPosition(
                     (p) => { $('#latitude').val(p.coords.latitude.toFixed(6)); $('#longitude').val(p.coords.longitude.toFixed(6)); $status.text('位置情報を取得しました。').addClass('text-success'); },
@@ -207,30 +198,39 @@
 
             // --- 設定の読み込み ---
             function loadSettings() {
-                console.log("設定をlocalStorageから読み込んでいます...");
-                const savedUrls = (localStorage.getItem('rssUrls') || '').split('\n').filter(Boolean);
+                console.log("Cookieから設定を読み込んでいます...");
+                const savedSettings = Cookies.get('dashboardSettings') ? JSON.parse(Cookies.get('dashboardSettings')) : {};
+                const defaults = {
+                    rssUrls: '', scrollSpeed: 120, latitude: '', longitude: '',
+                    showRss: true, showWeather: true, showCalendar: false, showHolidays: true,
+                    highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
+                    showWind: true, showPressure: true, showVisibility: true,
+                    ipadMode: false, debugOverlayEnabled: false
+                };
+                const settings = { ...defaults, ...savedSettings };
+
+                const savedUrls = (settings.rssUrls || '').split('\n').filter(Boolean);
                 $('.preset-rss-toggle').each(function() { $(this).prop('checked', savedUrls.includes($(this).data('url'))); });
                 const customUrls = savedUrls.filter(url => !Object.values(presetFeeds).includes(url));
                 $('#rss-urls').val(customUrls.join('\n'));
-                $('#scroll-speed').val(localStorage.getItem('scrollSpeed') || '120');
-                $('#latitude').val(localStorage.getItem('latitude'));
-                $('#longitude').val(localStorage.getItem('longitude'));
                 
-                $('#show-rss').prop('checked', JSON.parse(localStorage.getItem('showRss') || 'true'));
-                $('#show-weather').prop('checked', JSON.parse(localStorage.getItem('showWeather') || 'true'));
-                $('#show-calendar').prop('checked', JSON.parse(localStorage.getItem('showCalendar') || 'false'));
-                $('#show-holidays').prop('checked', JSON.parse(localStorage.getItem('showHolidays') || 'true'));
-                $('#high-precision-seconds').prop('checked', JSON.parse(localStorage.getItem('highPrecisionSeconds') || 'false'));
-                $('#alarm-time').val(localStorage.getItem('alarmTime') || '');
-                $('#enable-alarm').prop('checked', JSON.parse(localStorage.getItem('enableAlarm') || 'false'));
+                $('#scroll-speed').val(settings.scrollSpeed);
+                $('#latitude').val(settings.latitude);
+                $('#longitude').val(settings.longitude);
+                $('#show-rss').prop('checked', settings.showRss);
+                $('#show-weather').prop('checked', settings.showWeather);
+                $('#show-calendar').prop('checked', settings.showCalendar);
+                $('#show-holidays').prop('checked', settings.showHolidays);
+                $('#high-precision-seconds').prop('checked', settings.highPrecisionSeconds);
+                $('#alarm-time').val(settings.alarmTime);
+                $('#enable-alarm').prop('checked', settings.enableAlarm);
+                $('#show-wind').prop('checked', settings.showWind);
+                $('#show-pressure').prop('checked', settings.showPressure);
+                $('#show-visibility').prop('checked', settings.showVisibility);
+                $('#ipad-mode').prop('checked', settings.ipadMode);
+                $('#debug-overlay').prop('checked', settings.debugOverlayEnabled);
                 
-                $('#show-wind').prop('checked', JSON.parse(localStorage.getItem('showWind') || 'true'));
-                $('#show-pressure').prop('checked', JSON.parse(localStorage.getItem('showPressure') || 'true'));
-                $('#show-visibility').prop('checked', JSON.parse(localStorage.getItem('showVisibility') || 'true'));
-                $('#ipad-mode').prop('checked', JSON.parse(localStorage.getItem('ipadMode') || 'false'));
-                $('#debug-overlay').prop('checked', debugOverlayEnabled);
-                
-                toggleHolidayOption(); // 初期表示を更新
+                toggleHolidayOption();
                 console.log("設定の読み込みが完了しました。");
             }
             loadSettings();
@@ -238,29 +238,33 @@
             // --- 設定の保存 ---
             $('#settings-form').on('submit', function(e) {
                 e.preventDefault();
-                console.log("設定を保存しています...");
+                console.log("設定をCookieに保存しています...");
                 const selectedPresetUrls = $('.preset-rss-toggle:checked').map(function() { return $(this).data('url'); }).get();
                 const customUrls = ($('#rss-urls').val() || '').split('\n').filter(Boolean);
                 const allUrls = [...new Set([...selectedPresetUrls, ...customUrls])];
                 
-                localStorage.setItem('rssUrls', allUrls.join('\n'));
-                localStorage.setItem('scrollSpeed', $('#scroll-speed').val());
-                localStorage.setItem('latitude', $('#latitude').val());
-                localStorage.setItem('longitude', $('#longitude').val());
-                localStorage.setItem('showRss', $('#show-rss').prop('checked'));
-                localStorage.setItem('showWeather', $('#show-weather').prop('checked'));
-                localStorage.setItem('showCalendar', $('#show-calendar').prop('checked'));
-                localStorage.setItem('showHolidays', $('#show-holidays').prop('checked'));
-                localStorage.setItem('highPrecisionSeconds', $('#high-precision-seconds').prop('checked'));
-                localStorage.setItem('alarmTime', $('#alarm-time').val());
-                localStorage.setItem('enableAlarm', $('#enable-alarm').prop('checked'));
-                localStorage.setItem('showWind', $('#show-wind').prop('checked'));
-                localStorage.setItem('showPressure', $('#show-pressure').prop('checked'));
-                localStorage.setItem('showVisibility', $('#show-visibility').prop('checked'));
-                localStorage.setItem('ipadMode', $('#ipad-mode').prop('checked'));
-                localStorage.setItem('debugOverlay', $('#debug-overlay').prop('checked'));
+                const settingsToSave = {
+                    rssUrls: allUrls.join('\n'),
+                    scrollSpeed: $('#scroll-speed').val(),
+                    latitude: $('#latitude').val(),
+                    longitude: $('#longitude').val(),
+                    showRss: $('#show-rss').prop('checked'),
+                    showWeather: $('#show-weather').prop('checked'),
+                    showCalendar: $('#show-calendar').prop('checked'),
+                    showHolidays: $('#show-holidays').prop('checked'),
+                    highPrecisionSeconds: $('#high-precision-seconds').prop('checked'),
+                    alarmTime: $('#alarm-time').val(),
+                    enableAlarm: $('#enable-alarm').prop('checked'),
+                    showWind: $('#show-wind').prop('checked'),
+                    showPressure: $('#show-pressure').prop('checked'),
+                    showVisibility: $('#show-visibility').prop('checked'),
+                    ipadMode: $('#ipad-mode').prop('checked'),
+                    debugOverlayEnabled: $('#debug-overlay').prop('checked')
+                };
 
-                console.log("保存されたRSSフィード:", allUrls);
+                Cookies.set('dashboardSettings', JSON.stringify(settingsToSave), { expires: 365 });
+
+                console.log("保存された設定:", settingsToSave);
                 alert('設定を保存しました。');
                 window.location.href = '/';
             });
