@@ -22,31 +22,28 @@
         <div id="overlay-debug-monitor"></div>
 
         <!-- 時計表示エリア -->
-        <div class="clock-container">
+        <div class="clock-container hidden-on-load">
             <div id="clock">
                 <span class="clock-digit">0</span><span class="clock-digit">0</span>
                 <span class="clock-separator">:</span>
                 <span class="clock-digit">0</span><span class="clock-digit">0</span>
             </div>
         </div>
-
-        <!-- カレンダー表示エリア -->
-        <div id="calendar-container"></div>
     </div>
 
     <footer class="footer-container">
         <!-- 秒表示エリア -->
-        <div class="seconds-wrapper">
+        <div class="seconds-wrapper hidden-on-load">
             <div id="seconds">
                 <span class="second-digit">0</span><span class="second-digit">0</span><span id="second-decimals"></span>
             </div>
         </div>
         <!-- ニュースティッカーのコンテナ -->
-        <div class="news-container">
+        <div class="news-container hidden-on-load">
             <div id="news-ticker-content"></div>
         </div>
         <!-- メタ情報（天気、日付）のコンテナ -->
-        <div class="meta-container">
+        <div class="meta-container hidden-on-load">
              <div id="weather">
                 <!-- 天気情報がここに表示されます -->
              </div>
@@ -61,8 +58,8 @@
 
     <!-- jQueryを読み込みます -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- 日本の祝日ライブラリ -->
-    <script src="https://cdn.jsdelivr.net/npm/@holiday-jp/holiday_jp@2.4.0/lib/holiday_jp.min.js"></script>
+    <!-- 日本の祝日ライブラリ (ブラウザ用のURLに修正) -->
+    <script src="https://cdn.jsdelivr.net/npm/@holiday-jp/holiday_jp@2.4.0/dist/holiday_jp.min.js"></script>
     <!-- フロントエンドのJavaScriptファイルを読み込みます -->
     <script src="script.js"></script>
 </body>

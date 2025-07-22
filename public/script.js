@@ -86,10 +86,7 @@ $(document).ready(function() {
                 isAlarmRinging = true;
                 alarmTriggeredToday = true;
             }
-            // 0時0分にリセット
-            if (currentTime === "00:00") {
-                alarmTriggeredToday = false;
-            }
+            if (currentTime === "00:00") alarmTriggeredToday = false;
         }
         
         requestAnimationFrame(clockLoop);
@@ -105,10 +102,8 @@ $(document).ready(function() {
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         
-        let html = `<div class="calendar-header">${year}年 ${month + 1}月</div>`;
-        html += '<div class="calendar-grid">';
+        let html = `<div class="calendar-header">${year}年 ${month + 1}月</div><div class="calendar-grid">`;
         '日月火水木金土'.split('').forEach(day => html += `<div class="calendar-weekday">${day}</div>`);
-        
         for (let i = 0; i < firstDay; i++) html += '<div></div>';
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
@@ -121,15 +116,37 @@ $(document).ready(function() {
         $('#calendar-container').html(html);
     }
 
+    // --- 起動シーケンス ---
+    function animateElement(selector) {
+        const $element = $(selector);
+        $element.removeClass('hidden-on-load');
+        $element.addClass('blinking');
+        setTimeout(() => {
+            $element.removeClass('blinking');
+            setTimeout(() => {
+                $element.addClass('fade-in');
+            }, 500); // 0.5s wait
+        }, 450); // 3 blinks * 150ms
+    }
+
+    function startUpSequence() {
+        // 1. 時計
+        animateElement('.clock-container');
+        // 2. RSS (1秒後)
+        setTimeout(() => animateElement('.news-container'), 1000);
+        // 3. 天気、日付、秒 (2秒後)
+        setTimeout(() => animateElement('.meta-container, .seconds-wrapper'), 2000);
+    }
+
     // --- 初期化 & 定期実行 ---
     function initialize() {
+        startUpSequence(); // 起動アニメーションを開始
         updateDate();
         if (settings.showWeather) fetchWeather();
         if (settings.showRss) fetchNews();
         renderCalendar();
         clockLoop(); // 高速ループを開始
 
-        // 低速の定期実行
         setInterval(updateDate, 60000);
         if (settings.showWeather) setInterval(fetchWeather, 600000);
         if (settings.showRss) setInterval(fetchNews, 3600000);
@@ -137,7 +154,7 @@ $(document).ready(function() {
 
     if (!settings.rssUrlsRaw || !settings.lat || !settings.lon) {
         if (window.location.pathname !== '/settings.html') {
-             $('.news-container').text('右上の歯車アイコンからRSSと地域を設定してください。');
+             $('.news-container').text('右上の歯車アイコンからRSSと地域を設定してください。').show();
         }
     } else {
         initialize();

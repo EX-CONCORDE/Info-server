@@ -26,6 +26,15 @@ body:not(.settings-body) { overflow: hidden; }
 
 @keyframes ticker-animation { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
+/* --- 起動シーケンスアニメーション --- */
+.hidden-on-load { opacity: 0; }
+.blinking { animation: blink-animation 0.15s 3; } /* 3回点滅 */
+.fade-in { opacity: 1; transition: opacity 1.5s ease-in; }
+
+@keyframes blink-animation {
+    50% { opacity: 0; }
+}
+
 /* --- カレンダー --- */
 #calendar-container { position: absolute; top: 50%; left: 30px; transform: translateY(-50%); font-size: clamp(10px, 1.2vw, 16px); width: 25vw; max-width: 300px; }
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
@@ -59,4 +68,4 @@ body:not(.settings-body) { overflow: hidden; }
 .ipad-layout .second-digit { font-size: clamp(60px, 8vh, 75px); }
 .ipad-layout .news-container, .ipad-layout #date { font-size: clamp(20px, 3vh, 28px); }
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
-.ipad-layout #calendar-container { display: none; } /* iPadではカレンダーを非表示 */
+.ipad-layout #calendar-container { display: none; }
