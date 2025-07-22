@@ -38,6 +38,8 @@ $(document).ready(function() {
         if (!settings.showCalendar) {
             $('#calendar-container').hide();
         }
+        // 時計は常に表示する
+        $('.clock-container').show();
     }
 
     // --- アラーム関連 ---
@@ -122,7 +124,6 @@ $(document).ready(function() {
     // --- 起動シーケンス ---
     function animateElement(selector) {
         const $element = $(selector);
-        if ($element.is(':hidden')) return;
 
         $element.removeClass('hidden-on-load').addClass('blinking');
         setTimeout(() => {
