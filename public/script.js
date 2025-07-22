@@ -37,8 +37,6 @@ $(document).ready(function() {
         if (!settings.showWeather) $('#weather').hide();
         if (!settings.showCalendar) {
             $('#calendar-container').hide();
-        } else {
-            $('.main-content').addClass('calendar-active');
         }
     }
 
@@ -134,7 +132,9 @@ $(document).ready(function() {
     }
 
     function startUpSequence() {
-        animateElement('.clock-container, .seconds-wrapper, #calendar-container');
+        animateElement('.clock-container');
+        animateElement('.seconds-wrapper');
+        if (settings.showCalendar) animateElement('#calendar-container');
         setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container'), 2000);
     }

@@ -38,7 +38,12 @@ body:not(.settings-body) { overflow: hidden; }
 @keyframes ticker-animation { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
 /* --- カレンダー --- */
-#calendar-container { position: absolute; top: 50%; left: 30px; transform: translateY(-50%); font-size: clamp(10px, 1.2vw, 16px); width: 25vw; max-width: 300px; }
+#calendar-container {
+    font-size: clamp(10px, 1.2vw, 16px);
+    width: 25vw;
+    max-width: 300px;
+    align-self: flex-start;
+}
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 .calendar-header { text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 1.5em; }
 .calendar-day, .calendar-weekday { text-align: center; padding: 0.5em 0; }
@@ -96,7 +101,3 @@ body:not(.settings-body) { overflow: hidden; }
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
-/* Layout adjustments when calendar is visible */
-.main-content.calendar-active { justify-content: flex-end; }
-.main-content.calendar-active .clock-container { margin-right: 30px; }
