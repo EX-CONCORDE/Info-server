@@ -17,9 +17,10 @@
     <!-- 設定ページへのリンク (右上) -->
     <a href="/settings.html" class="settings-link" title="設定">⚙️</a>
 
-    <div class="main-content">
+        <div class="main-content">
         <!-- Overlay Debug Monitor -->
         <div id="overlay-debug-monitor"></div>
+        <div id="quake-banner"></div>
 
         <!-- 時計表示エリア -->
         <div class="clock-container hidden-on-load">
@@ -59,7 +60,9 @@
     </footer>
 
     <!-- アラーム音 -->
-    <audio id="alarm-sound" src="https://cdn.freesound.org/previews/219/219244_4032686-lq.mp3" preload="auto"></audio>
+    <audio id="alarm-sound" src="https://cdn.freesound.org/previews/219/219244_4032686-lq.mp3" preload="auto" loop></audio>
+    <!-- 時報音 -->
+    <audio id="hourly-chime" src="https://cdn.freesound.org/previews/170/170064_2398400-lq.mp3" preload="auto"></audio>
 
     <!-- jQueryを読み込みます -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

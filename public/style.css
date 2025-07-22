@@ -79,6 +79,22 @@ body.calendar-active .footer-container {
 .alarm-ringing { animation: alarm-flash 1s infinite; }
 @keyframes alarm-flash { 50% { background-color: #500; } }
 
+/* --- 地震情報バナー --- */
+#quake-banner {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #ff4500;
+    color: #fff;
+    padding: 5px 0;
+    font-weight: bold;
+    display: none;
+    z-index: 20;
+}
+#quake-banner.visible { display: block; }
+
 /* --- 設定ページのスタイル --- */
 .settings-body {
     height: auto; /* コンテンツに合わせて高さを自動調整 */

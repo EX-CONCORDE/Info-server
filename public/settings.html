@@ -59,6 +59,22 @@
                     </div>
                 </div>
             </div>
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" role="switch" id="enable-chime">
+                <label class="form-check-label" for="enable-chime">毎正時に時報を鳴らす</label>
+            </div>
+
+            <div class="form-check form-switch mb-1">
+                <input class="form-check-input" type="checkbox" role="switch" id="enable-quake">
+                <label class="form-check-label" for="enable-quake">地震情報表示</label>
+            </div>
+            <div class="mb-3 ps-4" id="quake-threshold-wrapper">
+                <label for="quake-threshold" class="form-label">表示する震度:</label>
+                <select id="quake-threshold" class="form-select">
+                    <option value="1">震度1以上</option>
+                    <option value="3">震度3以上</option>
+                </select>
+            </div>
 
             <hr>
             <h5 class="mt-4">RSS設定</h5>
@@ -187,6 +203,11 @@
             function toggleHolidayOption() { $holidaysWrapper.toggle($calendarToggle.is(':checked')); }
             $calendarToggle.on('change', toggleHolidayOption);
 
+            const $quakeToggle = $('#enable-quake');
+            const $quakeWrapper = $('#quake-threshold-wrapper');
+            function toggleQuakeOption() { $quakeWrapper.toggle($quakeToggle.is(':checked')); }
+            $quakeToggle.on('change', toggleQuakeOption);
+
             $('#get-location-btn').on('click', function() {
                 const $status = $('#location-status');
                 if (!navigator.geolocation) { $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger'); return; }
@@ -205,6 +226,7 @@
                     rssUrls: '', scrollSpeed: 120, latitude: '', longitude: '',
                     showRss: true, showWeather: true, showCalendar: false, showHolidays: true,
                     highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
+                    enableChime: false, enableQuake: false, quakeThreshold: 1,
                     showWind: true, showPressure: true, showVisibility: true,
                     ipadMode: false, debugOverlayEnabled: false
                 };
@@ -225,6 +247,9 @@
                 $('#high-precision-seconds').prop('checked', settings.highPrecisionSeconds);
                 $('#alarm-time').val(settings.alarmTime);
                 $('#enable-alarm').prop('checked', settings.enableAlarm);
+                $('#enable-chime').prop('checked', settings.enableChime);
+                $('#enable-quake').prop('checked', settings.enableQuake);
+                $('#quake-threshold').val(settings.quakeThreshold);
                 $('#show-wind').prop('checked', settings.showWind);
                 $('#show-pressure').prop('checked', settings.showPressure);
                 $('#show-visibility').prop('checked', settings.showVisibility);
@@ -232,6 +257,7 @@
                 $('#debug-overlay').prop('checked', settings.debugOverlayEnabled);
                 
                 toggleHolidayOption();
+                toggleQuakeOption();
                 console.log("設定の読み込みが完了しました。");
             }
             loadSettings();
@@ -256,6 +282,9 @@
                     highPrecisionSeconds: $('#high-precision-seconds').prop('checked'),
                     alarmTime: $('#alarm-time').val(),
                     enableAlarm: $('#enable-alarm').prop('checked'),
+                    enableChime: $('#enable-chime').prop('checked'),
+                    enableQuake: $('#enable-quake').prop('checked'),
+                    quakeThreshold: $('#quake-threshold').val(),
                     showWind: $('#show-wind').prop('checked'),
                     showPressure: $('#show-pressure').prop('checked'),
                     showVisibility: $('#show-visibility').prop('checked'),
