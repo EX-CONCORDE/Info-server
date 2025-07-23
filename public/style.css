@@ -37,18 +37,17 @@ body.calendar-active .footer-container {
 .news-container { width: 100%; overflow: hidden; border: 2px solid #4dabf7; border-radius: 8px; padding: 0.4em 0; font-size: clamp(18px, 2.5vw, 30px); box-sizing: border-box; }
 #news-ticker-content { display: inline-block; padding-left: 100%; animation-name: ticker-animation; animation-timing-function: linear; animation-iteration-count: infinite; white-space: nowrap; }
 .news-container:hover #news-ticker-content { animation-play-state: paused; }
+#date { text-align: left; font-size: clamp(18px, 2.5vw, 30px); line-height: 1.4; }
 .meta-container {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 0.5em 1em;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3em;
     width: 100%;
     padding: 0 30px;
     box-sizing: border-box;
     margin-top: auto;
 }
-#date { text-align: right; font-size: clamp(18px, 2.5vw, 30px); line-height: 1.4; }
 #seconds { display: flex; flex-direction: column; align-items: center; }
 .seconds-main { display: flex; gap: 0.35em; }
 .second-digit { font-family: 'Orbitron', sans-serif; font-size: clamp(50px, 6vw, 85px); font-weight: 700; color: #ccc; line-height: 1; width: 0.7em; text-align: center; }
@@ -137,6 +136,7 @@ body.calendar-active .footer-container {
 .nexus5x-layout #second-decimals { font-size: clamp(16px, 7vw, 24px); }
 .nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(16px, 4vw, 22px); }
 .nexus5x-layout #weather { font-size: clamp(14px, 3vw, 16px); }
+.nexus5x-layout #calendar-container { display: none; }
 
 @media (orientation: landscape) {
     .nexus5x-layout #clock { font-size: clamp(70px, 25vh, 120px); }
@@ -144,7 +144,7 @@ body.calendar-active .footer-container {
     .nexus5x-layout #second-decimals { font-size: clamp(14px, 4vh, 20px); }
     .nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(14px, 3vh, 18px); }
     .nexus5x-layout #weather { font-size: clamp(12px, 2.5vh, 16px); }
-    .nexus5x-layout #calendar-container { bottom: 60px; }
+    .nexus5x-layout #calendar-container { display: none; }
 }
 
 /* --- HAL9000 Animation --- */

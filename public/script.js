@@ -46,7 +46,7 @@ $(document).ready(function() {
         if (settings.nexus5xMode) $('body').addClass('nexus5x-layout');
         if (!settings.showRss) $('.news-container').hide();
         if (!settings.showWeather) $('#weather').hide();
-        if (!settings.showCalendar) {
+        if (!settings.showCalendar || settings.nexus5xMode) {
             $('#calendar-container').hide();
             $('body').removeClass('calendar-active');
         } else {
@@ -123,7 +123,7 @@ $(document).ready(function() {
 
     // --- カレンダー ---
     function renderCalendar() {
-        if (!settings.showCalendar) return;
+        if (!settings.showCalendar || settings.nexus5xMode) return;
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
@@ -162,7 +162,7 @@ $(document).ready(function() {
     function startUpSequence() {
         animateElement('.clock-container');
         animateElement('.seconds-wrapper');
-        if (settings.showCalendar) animateElement('#calendar-container');
+        if (settings.showCalendar && !settings.nexus5xMode) animateElement('#calendar-container');
         setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container'), 2000);
     }
