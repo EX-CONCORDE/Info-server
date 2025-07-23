@@ -137,7 +137,15 @@ body.calendar-active .footer-container {
 .nexus5x-layout #second-decimals { font-size: clamp(16px, 7vw, 24px); }
 .nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(16px, 4vw, 22px); }
 .nexus5x-layout #weather { font-size: clamp(14px, 3vw, 16px); }
-.nexus5x-layout #calendar-container { display: none; }
+
+@media (orientation: landscape) {
+    .nexus5x-layout #clock { font-size: clamp(70px, 25vh, 120px); }
+    .nexus5x-layout .second-digit { font-size: clamp(32px, 8vh, 50px); }
+    .nexus5x-layout #second-decimals { font-size: clamp(14px, 4vh, 20px); }
+    .nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(14px, 3vh, 18px); }
+    .nexus5x-layout #weather { font-size: clamp(12px, 2.5vh, 16px); }
+    .nexus5x-layout #calendar-container { bottom: 60px; }
+}
 
 /* --- HAL9000 Animation --- */
 .hidden-on-load { opacity: 0; }
