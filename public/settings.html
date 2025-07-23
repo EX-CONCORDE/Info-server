@@ -130,6 +130,10 @@
                     <label class="form-check-label" for="ipad-mode">iPad (9th Gen) レイアウト</label>
                 </div>
                 <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="nexus5x-mode">
+                    <label class="form-check-label" for="nexus5x-mode">Nexus 5X レイアウト</label>
+                </div>
+                <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="debug-overlay">
                     <label class="form-check-label" for="debug-overlay">メイン画面にデバッグ情報をオーバーレイ</label>
                 </div>
@@ -228,7 +232,7 @@
                     highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
                     enableChime: false, enableQuake: false, quakeThreshold: 1,
                     showWind: true, showPressure: true, showVisibility: true,
-                    ipadMode: false, debugOverlayEnabled: false
+                    ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false
                 };
                 const settings = { ...defaults, ...savedSettings };
 
@@ -254,6 +258,7 @@
                 $('#show-pressure').prop('checked', settings.showPressure);
                 $('#show-visibility').prop('checked', settings.showVisibility);
                 $('#ipad-mode').prop('checked', settings.ipadMode);
+                $('#nexus5x-mode').prop('checked', settings.nexus5xMode);
                 $('#debug-overlay').prop('checked', settings.debugOverlayEnabled);
                 
                 toggleHolidayOption();
@@ -289,6 +294,7 @@
                     showPressure: $('#show-pressure').prop('checked'),
                     showVisibility: $('#show-visibility').prop('checked'),
                     ipadMode: $('#ipad-mode').prop('checked'),
+                    nexus5xMode: $('#nexus5x-mode').prop('checked'),
                     debugOverlayEnabled: $('#debug-overlay').prop('checked')
                 };
 

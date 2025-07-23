@@ -131,6 +131,14 @@ body.calendar-active .footer-container {
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
 .ipad-layout #calendar-container { display: none; }
 
+/* --- Nexus 5X Layout Adjustments --- */
+.nexus5x-layout #clock { font-size: clamp(80px, 40vw, 160px); }
+.nexus5x-layout .second-digit { font-size: clamp(40px, 16vw, 60px); }
+.nexus5x-layout #second-decimals { font-size: clamp(16px, 7vw, 24px); }
+.nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(16px, 4vw, 22px); }
+.nexus5x-layout #weather { font-size: clamp(14px, 3vw, 16px); }
+.nexus5x-layout #calendar-container { display: none; }
+
 /* --- HAL9000 Animation --- */
 .hidden-on-load { opacity: 0; }
 .blinking { animation: blink-animation 0.45s linear; }

@@ -8,7 +8,7 @@ $(document).ready(function() {
             highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
             enableChime: false, enableQuake: false, quakeThreshold: 1,
             showWind: true, showPressure: true, showVisibility: true,
-            ipadMode: false, debugOverlayEnabled: false
+            ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false
         };
         // 保存された設定とデフォルト値をマージ
         return { ...defaults, ...savedSettings };
@@ -43,6 +43,7 @@ $(document).ready(function() {
     // --- UIの初期設定 ---
     function applyUISettings() {
         if (settings.ipadMode) $('body').addClass('ipad-layout');
+        if (settings.nexus5xMode) $('body').addClass('nexus5x-layout');
         if (!settings.showRss) $('.news-container').hide();
         if (!settings.showWeather) $('#weather').hide();
         if (!settings.showCalendar) {
