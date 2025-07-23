@@ -180,12 +180,8 @@ $(document).ready(function() {
         }
         console.log("天気情報を取得中...");
         $.get(`/api/weather?lat=${settings.latitude}&lon=${settings.longitude}`, function(data) {
-            let html = `<div>${data.name} (緯度:${data.coord.lat.toFixed(2)}, 経度:${data.coord.lon.toFixed(2)})</div>`;
-            html += `<div><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" style="vertical-align: middle; height: 2em; margin-right: 0.2em;"><span style="font-size: 1.5em; vertical-align: middle;">${data.main.temp.toFixed(1)}°C</span> (${data.weather[0].description})</div>`;
-            html += `<div><span style="color: #ff6347;">${data.main.temp_max.toFixed(1)}°C</span> / <span style="color: #4682b4;">${data.main.temp_min.toFixed(1)}°C</span> (体感: ${data.main.feels_like.toFixed(1)}°C)</div>`;
-            if (settings.showWind) html += `<div>風速: ${data.wind.speed.toFixed(1)}m/s, 風向: ${data.wind.deg}°</div>`;
-            if (settings.showPressure) html += `<div>湿度: ${data.main.humidity}%, 気圧: ${data.main.pressure}hPa</div>`;
-            if (settings.showVisibility) html += `<div>雲量: ${data.clouds.all}%, 視程: ${(data.visibility / 1000).toFixed(1)}km</div>`;
+            let html = `<div><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" style="vertical-align: middle; height: 2em; margin-right: 0.2em;"><span style="font-size: 1.5em; vertical-align: middle;">${data.main.temp.toFixed(1)}°C</span></div>`;
+            html += `<div><span style="color: #ff6347;">${data.main.temp_max.toFixed(1)}°C</span> / <span style="color: #4682b4;">${data.main.temp_min.toFixed(1)}°C</span></div>`;
             $('#weather').html(html);
             console.log("天気情報を更新しました。");
         }).fail(function() { console.error("天気情報の取得に失敗しました。"); });
