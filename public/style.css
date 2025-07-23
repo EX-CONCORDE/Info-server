@@ -79,6 +79,22 @@ body.calendar-active .footer-container {
 .alarm-ringing { animation: alarm-flash 1s infinite; }
 @keyframes alarm-flash { 50% { background-color: #500; } }
 
+/* --- 地震情報バナー --- */
+#quake-banner {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #ff4500;
+    color: #fff;
+    padding: 5px 0;
+    font-weight: bold;
+    display: none;
+    z-index: 20;
+}
+#quake-banner.visible { display: block; }
+
 /* --- 設定ページのスタイル --- */
 .settings-body {
     height: auto; /* コンテンツに合わせて高さを自動調整 */
@@ -114,6 +130,22 @@ body.calendar-active .footer-container {
 .ipad-layout .news-container, .ipad-layout #date { font-size: clamp(20px, 3vh, 28px); }
 .ipad-layout #weather { font-size: clamp(16px, 2vh, 18px); }
 .ipad-layout #calendar-container { display: none; }
+
+/* --- Nexus 5X Layout Adjustments --- */
+.nexus5x-layout #clock { font-size: clamp(80px, 40vw, 160px); }
+.nexus5x-layout .second-digit { font-size: clamp(40px, 16vw, 60px); }
+.nexus5x-layout #second-decimals { font-size: clamp(16px, 7vw, 24px); }
+.nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(16px, 4vw, 22px); }
+.nexus5x-layout #weather { font-size: clamp(14px, 3vw, 16px); }
+
+@media (orientation: landscape) {
+    .nexus5x-layout #clock { font-size: clamp(70px, 25vh, 120px); }
+    .nexus5x-layout .second-digit { font-size: clamp(32px, 8vh, 50px); }
+    .nexus5x-layout #second-decimals { font-size: clamp(14px, 4vh, 20px); }
+    .nexus5x-layout .news-container, .nexus5x-layout #date { font-size: clamp(14px, 3vh, 18px); }
+    .nexus5x-layout #weather { font-size: clamp(12px, 2.5vh, 16px); }
+    .nexus5x-layout #calendar-container { bottom: 60px; }
+}
 
 /* --- HAL9000 Animation --- */
 .hidden-on-load { opacity: 0; }
