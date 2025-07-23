@@ -6,8 +6,9 @@ $(document).ready(function() {
             rssUrls: '', scrollSpeed: 120, latitude: '', longitude: '',
             showRss: true, showWeather: true, showCalendar: false, showHolidays: true,
             highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
+            enableChime: false, enableQuake: false, quakeThreshold: 1,
             showWind: true, showPressure: true, showVisibility: true,
-            ipadMode: false, debugOverlayEnabled: false
+            ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false
         };
         // 保存された設定とデフォルト値をマージ
         return { ...defaults, ...savedSettings };
@@ -42,12 +43,14 @@ $(document).ready(function() {
     // --- UIの初期設定 ---
     function applyUISettings() {
         if (settings.ipadMode) $('body').addClass('ipad-layout');
+        if (settings.nexus5xMode) $('body').addClass('nexus5x-layout');
         if (!settings.showRss) $('.news-container').hide();
         if (!settings.showWeather) $('#weather').hide();
-        if (!settings.showCalendar) {
+        if (!settings.showCalendar || settings.nexus5xMode) {
             $('#calendar-container').hide();
             $('body').removeClass('calendar-active');
         } else {
+            $('#calendar-container').show();
             $('body').addClass('calendar-active');
         }
         // 時計は常に表示する
@@ -56,8 +59,11 @@ $(document).ready(function() {
 
     // --- アラーム関連 ---
     const $alarmSound = $('#alarm-sound')[0];
+    const $chimeSound = $('#hourly-chime')[0];
+    let lastChimeHour = null;
     let isAlarmRinging = false;
     let alarmTriggeredToday = false;
+    let lastQuakeId = null;
     
     function stopAlarm() {
         if (isAlarmRinging) {
@@ -103,13 +109,21 @@ $(document).ready(function() {
             }
             if (currentTime === "00:00") alarmTriggeredToday = false;
         }
+
+        if (settings.enableChime && now.getMinutes() === 0 && now.getSeconds() === 0) {
+            if (lastChimeHour !== now.getHours()) {
+                $chimeSound.currentTime = 0;
+                $chimeSound.play();
+                lastChimeHour = now.getHours();
+            }
+        }
         
         requestAnimationFrame(clockLoop);
     }
 
     // --- カレンダー ---
     function renderCalendar() {
-        if (!settings.showCalendar) return;
+        if (!settings.showCalendar || settings.nexus5xMode) return;
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
@@ -148,7 +162,7 @@ $(document).ready(function() {
     function startUpSequence() {
         animateElement('.clock-container');
         animateElement('.seconds-wrapper');
-        if (settings.showCalendar) animateElement('#calendar-container');
+        if (settings.showCalendar && !settings.nexus5xMode) animateElement('#calendar-container');
         setTimeout(() => animateElement('.news-container'), 1000);
         setTimeout(() => animateElement('.meta-container'), 2000);
     }
@@ -166,12 +180,8 @@ $(document).ready(function() {
         }
         console.log("天気情報を取得中...");
         $.get(`/api/weather?lat=${settings.latitude}&lon=${settings.longitude}`, function(data) {
-            let html = `<div>${data.name} (緯度:${data.coord.lat.toFixed(2)}, 経度:${data.coord.lon.toFixed(2)})</div>`;
-            html += `<div><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" style="vertical-align: middle; height: 2em; margin-right: 0.2em;"><span style="font-size: 1.5em; vertical-align: middle;">${data.main.temp.toFixed(1)}°C</span> (${data.weather[0].description})</div>`;
-            html += `<div><span style="color: #ff6347;">${data.main.temp_max.toFixed(1)}°C</span> / <span style="color: #4682b4;">${data.main.temp_min.toFixed(1)}°C</span> (体感: ${data.main.feels_like.toFixed(1)}°C)</div>`;
-            if (settings.showWind) html += `<div>風速: ${data.wind.speed.toFixed(1)}m/s, 風向: ${data.wind.deg}°</div>`;
-            if (settings.showPressure) html += `<div>湿度: ${data.main.humidity}%, 気圧: ${data.main.pressure}hPa</div>`;
-            if (settings.showVisibility) html += `<div>雲量: ${data.clouds.all}%, 視程: ${(data.visibility / 1000).toFixed(1)}km</div>`;
+            let html = `<div><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" style="vertical-align: middle; height: 2em; margin-right: 0.2em;"><span style="font-size: 1.5em; vertical-align: middle;">${data.main.temp.toFixed(1)}°C</span></div>`;
+            html += `<div><span style="color: #ff6347;">${data.main.temp_max.toFixed(1)}°C</span> / <span style="color: #4682b4;">${data.main.temp_min.toFixed(1)}°C</span></div>`;
             $('#weather').html(html);
             console.log("天気情報を更新しました。");
         }).fail(function() { console.error("天気情報の取得に失敗しました。"); });
@@ -210,12 +220,44 @@ $(document).ready(function() {
         });
     }
 
+    // --- 地震情報取得 ---
+    const scaleMap = {
+        0: '0', 10: '1', 20: '2', 30: '3', 40: '4', 45: '5弱',
+        50: '5強', 55: '6弱', 60: '6強', 70: '7'
+    };
+
+    function fetchQuake() {
+        if (!settings.enableQuake) return;
+        $.get('https://api.p2pquake.net/v2/jma/quake?limit=1', function(data) {
+            if (!data || !data.length) return;
+            const q = data[0];
+            if (q.id === lastQuakeId) return;
+            lastQuakeId = q.id;
+            const scale = q.earthquake.maxScale;
+            const threshold = (parseInt(settings.quakeThreshold, 10) || 1) * 10;
+            if (scale >= threshold) {
+                const text = `${q.earthquake.hypocenter.name}で震度${scaleMap[scale] || scale}`;
+                $('#quake-banner').text(text).addClass('visible');
+                setTimeout(() => $('#quake-banner').removeClass('visible'), 10000);
+            }
+            if (scale >= 50) {
+                if (!isAlarmRinging) {
+                    $('body').addClass('alarm-ringing');
+                    $alarmSound.play();
+                    isAlarmRinging = true;
+                    setTimeout(stopAlarm, 10000);
+                }
+            }
+        }).fail(() => console.error('地震情報の取得に失敗しました。'));
+    }
+
     // --- アプリケーションの実行開始 ---
     applyUISettings();
     startUpSequence();
     updateDate();
     fetchWeather();
     fetchNews();
+    fetchQuake();
     fetchHolidayData();
     renderCalendar();
     clockLoop(); // 時計のループを開始
@@ -224,4 +266,5 @@ $(document).ready(function() {
     setInterval(updateDate, 60000);
     setInterval(fetchWeather, 600000);
     setInterval(fetchNews, 3600000);
+    setInterval(fetchQuake, 60000);
 });
