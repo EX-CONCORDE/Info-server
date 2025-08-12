@@ -13,7 +13,7 @@ body, html {
 body:not(.settings-body) { overflow: hidden; }
 
 /* メインコンテンツエリア (時計) */
-.main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 30px 0; position: relative; }
+.main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 30px 0; position: relative; }
 .clock-container { text-align: center; }
 #clock { font-family: 'Orbitron', sans-serif; font-size: clamp(100px, 22vw, 300px); font-weight: 700; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; gap: 0.1em; }
 .clock-digit { width: 0.7em; text-align: center; }
@@ -60,19 +60,35 @@ body.calendar-active .footer-container {
 
 /* --- カレンダー --- */
 #calendar-container {
-    position: absolute;
-    left: 30px;
-    bottom: clamp(100px, 20vh, 180px);
-    font-size: clamp(10px, 1.2vw, 16px);
-    width: clamp(180px, 25vw, 300px);
+    font-size: clamp(8px, 1vw, 14px);
+    width: clamp(240px, 60vw, 600px);
+    margin: 0 auto;
 }
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-.calendar-header { text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 1.5em; }
-.calendar-day, .calendar-weekday { text-align: center; padding: 0.5em 0; }
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1.6em;
+    gap: 3px;
+}
+.calendar-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 1.2em;
+}
+.calendar-day,
+.calendar-weekday {
+    text-align: center;
+    padding: 0.2em 0;
+}
 .calendar-weekday { color: #888; }
-.calendar-day.today { background-color: #444; border-radius: 50%; }
+.calendar-day.today { background-color: #444; border-radius: 4px; }
 .calendar-day.holiday { color: #ff6347; }
 .calendar-day.other-month { color: #555; }
+
+body.calendar-active .main-content {
+    justify-content: flex-start;
+}
 
 /* --- アラーム --- */
 .alarm-ringing { animation: alarm-flash 1s infinite; }
@@ -168,4 +184,93 @@ body.calendar-active .footer-container {
 @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* --- デザインテーマ --- */
+body.theme-blade-runner {
+    background-color: #020914;
+    color: rgba(0, 255, 255, 0.8);
+    font-family: 'Share Tech Mono', monospace;
+    background-image:
+        radial-gradient(circle at center, rgba(0,255,255,0.1) 0%, transparent 70%),
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
+}
+body.theme-blade-runner .news-container { border-color: rgba(0,255,255,0.8); }
+body.theme-blade-runner #clock,
+body.theme-blade-runner .second-digit,
+body.theme-blade-runner #second-decimals,
+body.theme-blade-runner .clock-separator {
+    color: rgba(0,255,255,0.8);
+    text-shadow: 0 0 8px rgba(0,255,255,0.7);
+}
+
+body.theme-evangelion {
+    background-color: #2d0000;
+    color: #ff0000;
+    font-family: 'Seven Segment', monospace;
+    background-image: repeating-linear-gradient(135deg, rgba(255,0,0,0.2) 0 10px, transparent 10px 20px);
+}
+body.theme-evangelion .news-container { border-color: #ff0000; }
+body.theme-evangelion #clock,
+body.theme-evangelion .second-digit,
+body.theme-evangelion #second-decimals,
+body.theme-evangelion .clock-separator {
+    color: #ff0000;
+    text-shadow: 0 0 6px rgba(255,0,0,0.6);
+}
+body.theme-evangelion #weather::before {
+    content: '\5929\6c17';
+    display: block;
+    font-size: 0.7em;
+    letter-spacing: 0.1em;
+}
+body.theme-evangelion #seconds::before {
+    content: '\79d2';
+    display: block;
+    font-size: 0.7em;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+body.theme-evangelion #calendar-container::before {
+    content: '\66dc';
+    display: block;
+    font-size: 0.7em;
+    text-align: center;
+    margin-bottom: 2px;
+    letter-spacing: 0.1em;
+}
+
+body.theme-space2001 {
+    background-color: #000;
+    color: #0ff;
+    font-family: 'Courier New', monospace;
+    position: relative;
+    overflow: hidden;
+}
+body.theme-space2001 .news-container { border-color: #0ff; }
+body.theme-space2001 #clock,
+body.theme-space2001 .second-digit,
+body.theme-space2001 #second-decimals,
+body.theme-space2001 .clock-separator {
+    color: #0ff;
+    text-shadow: 0 0 8px rgba(0,255,255,0.7);
+}
+body.theme-space2001::before {
+    content: 'ANTENNA\A \03A3=\2211\A GALAXY\A \03A9 = mc^2\A COSMOS\A VECTOR';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: clamp(12px, 2vw, 20px);
+    line-height: 1.2;
+    white-space: pre;
+    color: rgba(255,255,255,0.1);
+    pointer-events: none;
+    animation: space2001-scroll 20s linear infinite;
+}
+
+@keyframes space2001-scroll {
+    from { transform: translateY(0); }
+    to { transform: translateY(-200%); }
 }

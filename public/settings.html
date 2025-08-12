@@ -10,6 +10,9 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Custom CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&family=Seven+Segment&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-dark text-light settings-body">
@@ -37,9 +40,20 @@
                 <input class="form-check-input" type="checkbox" role="switch" id="show-calendar">
                 <label class="form-check-label" for="show-calendar">カレンダー</label>
             </div>
-             <div class="ps-4 form-check form-switch" id="show-holidays-wrapper">
-                <input class="form-check-input" type="checkbox" role="switch" id="show-holidays">
-                <label class="form-check-label" for="show-holidays">祝日表示 (カレンダーON時)</label>
+            <div class="ps-4 form-check form-switch" id="show-holidays-wrapper">
+               <input class="form-check-input" type="checkbox" role="switch" id="show-holidays">
+               <label class="form-check-label" for="show-holidays">祝日表示 (カレンダーON時)</label>
+           </div>
+
+            <h5 class="mt-4">デザインテーマ</h5>
+            <div class="form-group mb-3">
+                <label for="design-theme" class="form-label">テーマ:</label>
+                <select id="design-theme" class="form-select">
+                    <option value="default">標準</option>
+                    <option value="blade-runner">ブレード・ランナー風</option>
+                    <option value="evangelion">エヴァンゲリオン風</option>
+                    <option value="space2001">2001年宇宙の旅風</option>
+                </select>
             </div>
 
             <hr>
@@ -232,7 +246,8 @@
                     highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
                     enableChime: false, enableQuake: false, quakeThreshold: 1,
                     showWind: true, showPressure: true, showVisibility: true,
-                    ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false
+                    ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false,
+                    designTheme: 'default'
                 };
                 const settings = { ...defaults, ...savedSettings };
 
@@ -260,6 +275,7 @@
                 $('#ipad-mode').prop('checked', settings.ipadMode);
                 $('#nexus5x-mode').prop('checked', settings.nexus5xMode);
                 $('#debug-overlay').prop('checked', settings.debugOverlayEnabled);
+                $('#design-theme').val(settings.designTheme);
                 
                 toggleHolidayOption();
                 toggleQuakeOption();
@@ -295,7 +311,8 @@
                     showVisibility: $('#show-visibility').prop('checked'),
                     ipadMode: $('#ipad-mode').prop('checked'),
                     nexus5xMode: $('#nexus5x-mode').prop('checked'),
-                    debugOverlayEnabled: $('#debug-overlay').prop('checked')
+                    debugOverlayEnabled: $('#debug-overlay').prop('checked'),
+                    designTheme: $('#design-theme').val()
                 };
 
                 Cookies.set('dashboardSettings', JSON.stringify(settingsToSave), { expires: 365 });

@@ -8,7 +8,8 @@ $(document).ready(function() {
             highPrecisionSeconds: false, alarmTime: '', enableAlarm: false,
             enableChime: false, enableQuake: false, quakeThreshold: 1,
             showWind: true, showPressure: true, showVisibility: true,
-            ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false
+            ipadMode: false, nexus5xMode: false, debugOverlayEnabled: false,
+            designTheme: 'default'
         };
         // 保存された設定とデフォルト値をマージ
         return { ...defaults, ...savedSettings };
@@ -46,6 +47,9 @@ $(document).ready(function() {
         if (settings.nexus5xMode) $('body').addClass('nexus5x-layout');
         if (!settings.showRss) $('.news-container').hide();
         if (!settings.showWeather) $('#weather').hide();
+        if (settings.designTheme && settings.designTheme !== 'default') {
+            $('body').addClass(`theme-${settings.designTheme}`);
+        }
         if (!settings.showCalendar || settings.nexus5xMode) {
             $('#calendar-container').hide();
             $('body').removeClass('calendar-active');
