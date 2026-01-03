@@ -4,8 +4,6 @@
 
 **Info Server** is a comprehensive digital dashboard designed for always-on displays like iPads or older tablets (e.g., Nexus 5X). It aggregates essential information such as time, weather, news, and calendar events into a sleek, customizable interface.
 
-![Settings Preview](public/images/settings_preview.png)
-
 ## Features
 
 - **Digital Clock**: High-precision clock with the "Orbitron" font. Supports sub-second display.
