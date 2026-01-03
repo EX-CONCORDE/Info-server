@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Settings</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,9 +16,12 @@
     <!-- Custom CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&family=Seven+Segment&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&family=Seven+Segment&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-dark text-light settings-body">
     <!-- Debug Monitor -->
     <div id="debug-monitor">
@@ -25,7 +32,7 @@
     <div class="container settings-page">
         <h1 class="mb-4">設定</h1>
         <form id="settings-form" class="col-md-8 col-lg-6 mx-auto">
-            
+
             <hr>
             <h5 class="mt-4">表示機能 ON/OFF</h5>
             <div class="form-check form-switch">
@@ -41,9 +48,9 @@
                 <label class="form-check-label" for="show-calendar">カレンダー</label>
             </div>
             <div class="ps-4 form-check form-switch" id="show-holidays-wrapper">
-               <input class="form-check-input" type="checkbox" role="switch" id="show-holidays">
-               <label class="form-check-label" for="show-holidays">祝日表示 (カレンダーON時)</label>
-           </div>
+                <input class="form-check-input" type="checkbox" role="switch" id="show-holidays">
+                <label class="form-check-label" for="show-holidays">祝日表示 (カレンダーON時)</label>
+            </div>
 
             <h5 class="mt-4">デザインテーマ</h5>
             <div class="form-group mb-3">
@@ -63,12 +70,13 @@
                 <label class="form-check-label" for="high-precision-seconds">秒を小数点4桁まで表示</label>
             </div>
             <div class="form-group mb-3">
-                 <label class="form-label mt-2">アラーム:</label>
+                <label class="form-label mt-2">アラーム:</label>
                 <div class="input-group">
                     <input type="time" id="alarm-time" class="form-control">
                     <div class="input-group-text">
                         <div class="form-check form-switch m-0">
-                            <input class="form-check-input" type="checkbox" role="switch" id="enable-alarm" title="アラーム ON/OFF">
+                            <input class="form-check-input" type="checkbox" role="switch" id="enable-alarm"
+                                title="アラーム ON/OFF">
                         </div>
                     </div>
                 </div>
@@ -109,7 +117,7 @@
 
             <hr>
             <h5 class="mt-4">天気設定</h5>
-             <div class="form-group mb-3">
+            <div class="form-group mb-3">
                 <label class="form-label">位置情報:</label>
                 <div class="input-group">
                     <input type="number" step="any" id="latitude" class="form-control" placeholder="緯度" required>
@@ -165,11 +173,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // --- デバッグモニター設定 ---
             const savedSettingsForDebug = Cookies.get('dashboardSettings') ? JSON.parse(Cookies.get('dashboardSettings')) : {};
             const debugOverlayEnabled = savedSettingsForDebug.debugOverlayEnabled || false;
-            
+
             if (!debugOverlayEnabled) {
                 const debugContent = document.querySelector('#debug-monitor .debug-content');
                 function logToMonitor(message, type = 'log') {
@@ -191,23 +199,23 @@
 
             // --- テンプレートRSSデータ ---
             const presetFeeds = {
-                '読売新聞':'https://www.yomiuri.co.jp/rss/yol/topstories.xml',
-                '朝日新聞':'https://www.asahi.com/rss/asahi/newsheadlines.rdf',
-                '毎日新聞':'https://mainichi.jp/rss/etc/mainichi-flash.rss',
-                '産経新聞':'https://www.sankei.com/main/rss/main-flash.xml',
-                '日経新聞':'https://www.nikkei.com/rss/2.0/news_BreakingNews.xml',
-                'NHK':'https://www.nhk.or.jp/rss/news/cat0.xml',
-                '共同通信':'https://www.kyodo.co.jp/c/rss/flash.xml',
-                '時事通信':'https://www.jiji.com/rss/ranking.xml',
-                'Yahoo!ニュース':'https://news.yahoo.co.jp/rss/topics/top-picks.xml',
-                'Googleニュース':'https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja',
-                'ITmedia NEWS':'https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml',
-                'CNET Japan':'https://japan.cnet.com/rss/index.rdf',
-                'TechCrunch Japan':'https://jp.techcrunch.com/feed/',
-                'GIZMODO':'https://www.gizmodo.jp/index.xml',
-                'WIRED.jp':'https://wired.jp/feed/',
-                'GIGAZINE':'https://gigazine.net/news/rss_2.0/',
-                'はてなブックマーク':'https://b.hatena.ne.jp/hotentry/all.rss'
+                '読売新聞': 'https://www.yomiuri.co.jp/rss/yol/topstories.xml',
+                '朝日新聞': 'https://www.asahi.com/rss/asahi/newsheadlines.rdf',
+                '毎日新聞': 'https://mainichi.jp/rss/etc/mainichi-flash.rss',
+                '産経新聞': 'https://www.sankei.com/main/rss/main-flash.xml',
+                '日経新聞': 'https://www.nikkei.com/rss/2.0/news_BreakingNews.xml',
+                'NHK': 'https://www.nhk.or.jp/rss/news/cat0.xml',
+                '共同通信': 'https://www.kyodo.co.jp/c/rss/flash.xml',
+                '時事通信': 'https://www.jiji.com/rss/ranking.xml',
+                'Yahoo!ニュース': 'https://news.yahoo.co.jp/rss/topics/top-picks.xml',
+                'Googleニュース': 'https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja',
+                'ITmedia NEWS': 'https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml',
+                'CNET Japan': 'https://japan.cnet.com/rss/index.rdf',
+                'TechCrunch Japan': 'https://jp.techcrunch.com/feed/',
+                'GIZMODO': 'https://www.gizmodo.jp/index.xml',
+                'WIRED.jp': 'https://wired.jp/feed/',
+                'GIGAZINE': 'https://gigazine.net/news/rss_2.0/',
+                'はてなブックマーク': 'https://b.hatena.ne.jp/hotentry/all.rss'
             };
 
             const presetList = $('#preset-rss-list');
@@ -215,7 +223,7 @@
                 const switchId = `preset-${name.replace(/[^a-zA-Z0-9]/g, '')}`;
                 presetList.append(`<div class="form-check form-switch"><input class="form-check-input preset-rss-toggle" type="checkbox" id="${switchId}" data-url="${url}"><label class="form-check-label" for="${switchId}">${name}</label></div>`);
             });
-            
+
             const $calendarToggle = $('#show-calendar');
             const $holidaysWrapper = $('#show-holidays-wrapper');
             function toggleHolidayOption() { $holidaysWrapper.toggle($calendarToggle.is(':checked')); }
@@ -226,7 +234,7 @@
             function toggleQuakeOption() { $quakeWrapper.toggle($quakeToggle.is(':checked')); }
             $quakeToggle.on('change', toggleQuakeOption);
 
-            $('#get-location-btn').on('click', function() {
+            $('#get-location-btn').on('click', function () {
                 const $status = $('#location-status');
                 if (!navigator.geolocation) { $status.text('お使いのブラウザは位置情報取得に対応していません。').addClass('text-danger'); return; }
                 $status.text('位置情報を取得中...').removeClass('text-danger text-success');
@@ -252,10 +260,10 @@
                 const settings = { ...defaults, ...savedSettings };
 
                 const savedUrls = (settings.rssUrls || '').split('\n').filter(Boolean);
-                $('.preset-rss-toggle').each(function() { $(this).prop('checked', savedUrls.includes($(this).data('url'))); });
+                $('.preset-rss-toggle').each(function () { $(this).prop('checked', savedUrls.includes($(this).data('url'))); });
                 const customUrls = savedUrls.filter(url => !Object.values(presetFeeds).includes(url));
                 $('#rss-urls').val(customUrls.join('\n'));
-                
+
                 $('#scroll-speed').val(settings.scrollSpeed);
                 $('#latitude').val(settings.latitude);
                 $('#longitude').val(settings.longitude);
@@ -276,7 +284,7 @@
                 $('#nexus5x-mode').prop('checked', settings.nexus5xMode);
                 $('#debug-overlay').prop('checked', settings.debugOverlayEnabled);
                 $('#design-theme').val(settings.designTheme);
-                
+
                 toggleHolidayOption();
                 toggleQuakeOption();
                 console.log("設定の読み込みが完了しました。");
@@ -284,13 +292,13 @@
             loadSettings();
 
             // --- 設定の保存 ---
-            $('#settings-form').on('submit', function(e) {
+            $('#settings-form').on('submit', function (e) {
                 e.preventDefault();
                 console.log("設定をCookieに保存しています...");
-                const selectedPresetUrls = $('.preset-rss-toggle:checked').map(function() { return $(this).data('url'); }).get();
+                const selectedPresetUrls = $('.preset-rss-toggle:checked').map(function () { return $(this).data('url'); }).get();
                 const customUrls = ($('#rss-urls').val() || '').split('\n').filter(Boolean);
                 const allUrls = [...new Set([...selectedPresetUrls, ...customUrls])];
-                
+
                 const settingsToSave = {
                     rssUrls: allUrls.join('\n'),
                     scrollSpeed: $('#scroll-speed').val(),
@@ -323,7 +331,7 @@
             });
 
             // --- Cookieリセット ---
-            $('#reset-cookie').on('click', function() {
+            $('#reset-cookie').on('click', function () {
                 if (confirm('全ての設定をリセットしますか？')) {
                     Cookies.remove('dashboardSettings');
                     alert('Cookieをリセットしました。');
@@ -333,4 +341,5 @@
         });
     </script>
 </body>
+
 </html>

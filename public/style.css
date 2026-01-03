@@ -116,7 +116,8 @@ body.calendar-active .main-content {
     min-height: 100vh; /* 背景が途切れないように */
     display: block; /* flexを解除して通常のスクロールを有効に */
     padding-right: 320px; /* デバッグモニターのスペースを確保 */
-    background-color: #000; /* 一貫した暗色背景 */
+    background-color: #1a1a1a !important; /* 一貫した暗色背景 (Bootstrapテーマより優先) */
+    background-image: none !important; /* 余計な背景画像を無効化 */
 }
 .settings-body.debug-overlay-active {
     padding-right: 0; /* オーバーレイ時はパディングを削除 */

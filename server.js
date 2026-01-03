@@ -21,6 +21,16 @@ if (!WEATHER_API_KEY) {
 // publicディレクトリのファイルを静的ファイルとして提供します
 app.use(express.static('public'));
 
+// キャッシュ無効化ミドルウェア (iPad等での容量圧迫を防止)
+app.use('/api', (req, res, next) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    });
+    next();
+});
+
 // 天気情報取得API
 app.get('/api/weather', async (req, res) => {
     const { lat, lon } = req.query;
